@@ -68,16 +68,18 @@ int udp_create_socket(uint16_t my_port)
         return -1;
     }
 
-    // struct sockaddr_in my_addr;
-    // my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    // my_addr.sin_port = my_port;
-    // my_addr.sin_family = AF_INET;
+    struct sockaddr_in my_addr;
+    my_addr.sin_addr.s_addr = INADDR_ANY;
+    my_addr.sin_port = htons(my_port);
+    my_addr.sin_family = AF_INET;
 
-    // if (bind(fd, (struct sockaddr *)&my_addr, sizeof(my_addr)) < 0)
-    // {
-    //     perror("udp bind");
-    //     goto out_close_socket;
-    // }
+    if (bind(fd, (struct sockaddr *)&my_addr, sizeof(my_addr)) < 0)
+    {
+        perror("udp bind");
+        goto out_close_socket;
+    }
+
+    printf("%s %d\n", inet_ntoa(my_addr.sin_addr), ntohs(my_addr.sin_port));
 
     return fd;
 
@@ -93,7 +95,7 @@ int udp_recv_from(int socket_fd, const char *ip_addr, uint16_t port, void *recv_
     socklen_t len = sizeof(from_addr);
 
     from_addr.sin_addr.s_addr = inet_addr(ip_addr);
-    from_addr.sin_port = port;
+    from_addr.sin_port = htons(port);
     from_addr.sin_family = AF_INET;
 
     return recvfrom(socket_fd, recv_buf, buf_len, 0, (struct sockaddr *)&from_addr, &len);
@@ -104,7 +106,7 @@ int udp_send_to(int socket_fd, const char *ip_addr, uint16_t port, const void *s
     struct sockaddr_in to_addr;
 
     to_addr.sin_addr.s_addr = inet_addr(ip_addr);
-    to_addr.sin_port = port;
+    to_addr.sin_port = htons(port);
     to_addr.sin_family = AF_INET;
 
     return sendto(socket_fd, send_buf, buf_len, 0, (struct sockaddr *)&to_addr, sizeof(to_addr));
@@ -113,7 +115,6 @@ int udp_send_to(int socket_fd, const char *ip_addr, uint16_t port, const void *s
 int main()
 {
     int socket_fd;
-    int ret;
     char buf[BUFSIZ] = {0};
 
     const char *str = "Hello world\n";
@@ -139,9 +140,9 @@ int main()
     if ((socket_fd = udp_create_socket(9999)) < 0)
         return -1;
 
-    // printf("send ret: %d\n", udp_send_to(socket_fd, "172.16.21.83", 10001, str, strlen(str) + 1));
+    printf("send ret: %d\n", udp_send_to(socket_fd, "172.16.13.44", 10001, str, strlen(str) + 1));
 
-    printf("recv ret: %d\n", udp_recv_from(socket_fd, "172.16.21.83", 10001, buf, BUFSIZ));
+    printf("recv ret: %d\n", udp_recv_from(socket_fd, "172.16.13.44", 10001, buf, BUFSIZ));
 
     printf("recv %s\n", buf);
 
