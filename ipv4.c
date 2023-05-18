@@ -12,7 +12,7 @@
 
 #include <errno.h>
 
-// #define TCP_TEST
+#define TCP_TEST
 
 int tcp_create_and_connect(const char *ip_addr, int port)
 {
@@ -25,7 +25,7 @@ int tcp_create_and_connect(const char *ip_addr, int port)
         perror("Socket create");
         return -1;
     }
-    
+
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
 
@@ -44,6 +44,43 @@ int tcp_create_and_connect(const char *ip_addr, int port)
 
 out_close_socket:
     close(fd);
+    return -1;
+}
+
+int tcp_create_and_listen(uint16_t port)
+{
+    int ret;
+    int fd;
+
+    fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0)
+    {
+        perror("Socket create");
+        return -1;
+    }
+
+    struct sockaddr_in addr;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+
+    if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+    {
+        perror("bind");
+        goto out_close_socket;
+    }
+
+    if (listen(fd, 5) < 0)
+    {
+        perror("listen");
+        goto out_close_socket;
+    }
+
+    return fd;
+
+out_close_socket:
+    close(fd);
+
     return -1;
 }
 
@@ -114,12 +151,15 @@ int udp_send_to(int socket_fd, const char *ip_addr, uint16_t port, const void *s
 
 int main()
 {
+    int ret;
     int socket_fd;
     char buf[BUFSIZ] = {0};
 
     const char *str = "Hello world\n";
 
 #ifdef TCP_TEST
+/*client side*/
+/*  
     if ((socket_fd = tcp_create_and_connect("172.16.21.83", 10001)) < 0)
         return -1;
 
@@ -131,10 +171,40 @@ int main()
             break;
 
         printf("read: %s\n", buf);
-        
+
     } while (strncmp(buf, "quit", sizeof(char) * 4) != 0);
 
     close(socket_fd);
+*/
+
+
+/*Server side*/
+
+    if ((socket_fd = tcp_create_and_listen(10001)) < 0)
+        return -1;
+
+    int afd;
+    struct sockaddr_in c_addr;
+    socklen_t c_len;
+
+    if ((afd = accept(socket_fd, (struct sockaddr *)&c_addr, &c_len)) < 0)
+        goto out_close_socket;
+
+    printf("Clinet addr: %s, port %d\n", inet_ntoa(c_addr.sin_addr), ntohs(c_addr.sin_port));
+
+    write(afd, str, strlen(str) + 1);
+
+    do {
+        memset(buf, 0, sizeof(buf));
+
+        ret = read(afd, buf, BUFSIZ);
+
+        printf("read %d -> %s\n", ret, buf);
+    } while (strncmp(buf, "quit", strlen("quit")) != 0);
+
+    close(afd);
+    close(socket_fd);
+
 #else
 
     if ((socket_fd = udp_create_socket(9999)) < 0)
