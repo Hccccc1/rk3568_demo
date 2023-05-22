@@ -31,6 +31,7 @@ extern lv_obj_t * ui_Label7;
 extern lv_obj_t * ui_Label8;
 extern lv_obj_t * ui_Label9;
 extern lv_obj_t * ui_SerialOpenBtn;
+void ui_event_SerialSendBt(lv_event_t * e);
 extern lv_obj_t * ui_SerialSendBt;
 extern lv_obj_t * ui_SerialReadPanel;
 extern lv_obj_t * ui_WifiScanBtn;

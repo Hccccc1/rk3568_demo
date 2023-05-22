@@ -25,6 +25,7 @@ lv_obj_t * ui_Label7;
 lv_obj_t * ui_Label8;
 lv_obj_t * ui_Label9;
 lv_obj_t * ui_SerialOpenBtn;
+void ui_event_SerialSendBt(lv_event_t * e);
 lv_obj_t * ui_SerialSendBt;
 lv_obj_t * ui_SerialReadPanel;
 lv_obj_t * ui_WifiScanBtn;
@@ -85,6 +86,14 @@ lv_obj_t * ui____initial_actions0;
 ///////////////////// ANIMATIONS ////////////////////
 
 ///////////////////// FUNCTIONS ////////////////////
+void ui_event_SerialSendBt(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        serial_send_clicked(e);
+    }
+}
 
 ///////////////////// SCREENS ////////////////////
 

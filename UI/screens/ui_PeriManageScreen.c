@@ -373,4 +373,6 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_Label21, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label21, "Value");
 
+    lv_obj_add_event_cb(ui_SerialSendBt, ui_event_SerialSendBt, LV_EVENT_ALL, NULL);
+
 }

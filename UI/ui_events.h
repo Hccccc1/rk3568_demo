@@ -10,6 +10,8 @@
 extern "C" {
 #endif
 
+void serial_send_clicked(lv_event_t * e);
+
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif
