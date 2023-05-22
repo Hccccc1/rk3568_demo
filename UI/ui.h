@@ -14,9 +14,9 @@ extern "C" {
 
 #include "ui_helpers.h"
 #include "ui_events.h"
-// SCREEN: ui_SerialSendBtn
-void ui_SerialSendBtn_screen_init(void);
-extern lv_obj_t * ui_SerialSendBtn;
+// SCREEN: ui_PeriManageScreen
+void ui_PeriManageScreen_screen_init(void);
+extern lv_obj_t * ui_PeriManageScreen;
 extern lv_obj_t * ui_SerialSendTextArea;
 extern lv_obj_t * ui_PortLabel;
 extern lv_obj_t * ui_SerialPortSelect;
@@ -62,9 +62,9 @@ extern lv_obj_t * ui_GPIODirectionSelect;
 extern lv_obj_t * ui_Label20;
 extern lv_obj_t * ui_GPIOValueSelect;
 extern lv_obj_t * ui_Label21;
-// SCREEN: ui_Screen2
-void ui_Screen2_screen_init(void);
-extern lv_obj_t * ui_Screen2;
+// SCREEN: ui_EthManageScreen
+void ui_EthManageScreen_screen_init(void);
+extern lv_obj_t * ui_EthManageScreen;
 extern lv_obj_t * ui_TextArea5;
 extern lv_obj_t * ui_Label3;
 extern lv_obj_t * ui_Dropdown1;

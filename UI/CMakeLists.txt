@@ -1,5 +1,5 @@
-SET(SOURCES screens/ui_SerialSendBtn.c
-    screens/ui_Screen2.c
+SET(SOURCES screens/ui_PeriManageScreen.c
+    screens/ui_EthManageScreen.c
     ui.c
     ui_helpers.c)
 

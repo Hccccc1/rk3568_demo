@@ -8,9 +8,9 @@
 
 ///////////////////// VARIABLES ////////////////////
 
-// SCREEN: ui_SerialSendBtn
-void ui_SerialSendBtn_screen_init(void);
-lv_obj_t * ui_SerialSendBtn;
+// SCREEN: ui_PeriManageScreen
+void ui_PeriManageScreen_screen_init(void);
+lv_obj_t * ui_PeriManageScreen;
 lv_obj_t * ui_SerialSendTextArea;
 lv_obj_t * ui_PortLabel;
 lv_obj_t * ui_SerialPortSelect;
@@ -57,9 +57,9 @@ lv_obj_t * ui_Label20;
 lv_obj_t * ui_GPIOValueSelect;
 lv_obj_t * ui_Label21;
 
-// SCREEN: ui_Screen2
-void ui_Screen2_screen_init(void);
-lv_obj_t * ui_Screen2;
+// SCREEN: ui_EthManageScreen
+void ui_EthManageScreen_screen_init(void);
+lv_obj_t * ui_EthManageScreen;
 lv_obj_t * ui_TextArea5;
 lv_obj_t * ui_Label3;
 lv_obj_t * ui_Dropdown1;
@@ -94,8 +94,8 @@ void ui_init(void)
     lv_theme_t * theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED),
                                                false, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
-    ui_SerialSendBtn_screen_init();
-    ui_Screen2_screen_init();
+    ui_PeriManageScreen_screen_init();
+    ui_EthManageScreen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
-    lv_disp_load_scr(ui_SerialSendBtn);
+    lv_disp_load_scr(ui_PeriManageScreen);
 }
