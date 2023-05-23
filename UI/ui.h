@@ -30,9 +30,10 @@ extern lv_obj_t * ui_Label4;
 extern lv_obj_t * ui_Label7;
 extern lv_obj_t * ui_Label8;
 extern lv_obj_t * ui_Label9;
+void ui_event_SerialOpenBtn(lv_event_t * e);
 extern lv_obj_t * ui_SerialOpenBtn;
 void ui_event_SerialSendBt(lv_event_t * e);
-extern lv_obj_t * ui_SerialSendBt;
+extern lv_obj_t * ui_SerialSendBtn;
 extern lv_obj_t * ui_SerialReadPanel;
 extern lv_obj_t * ui_WifiScanBtn;
 extern lv_obj_t * ui_WifiSwitch;
@@ -79,6 +80,8 @@ extern lv_obj_t * ui_Button6;
 extern lv_obj_t * ui_TextArea8;
 extern lv_obj_t * ui_Switch2;
 extern lv_obj_t * ui____initial_actions0;
+
+extern serial_manage_widgets_t serial_widgets;
 
 void ui_init(void);
 

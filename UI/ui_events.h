@@ -6,10 +6,28 @@
 #ifndef _UI_EVENTS_H
 #define _UI_EVENTS_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef struct
+{
+    int serial_fd;
+    lv_obj_t *port_select;
+    lv_obj_t *baudrate_select;
+    lv_obj_t *databits_select;
+    lv_obj_t *stopbits_select;
+    lv_obj_t *parity_select;
+    lv_obj_t *hardflow_select;
+    lv_obj_t *open_btn;
+    lv_obj_t *send_btn;
+    lv_obj_t *read_panel;
+    lv_obj_t *send_text;
+} serial_manage_widgets_t;
+
+void serial_open_clicked(lv_event_t * e);
 void serial_send_clicked(lv_event_t * e);
 
 #ifdef __cplusplus

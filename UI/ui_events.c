@@ -3,9 +3,161 @@
 // LVGL version: 8.3.4
 // Project name: SquareLine_Project
 
+#include <stdlib.h>
+#include <unistd.h>
+#include <termios.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "ui.h"
 
-void serial_send_clicked(lv_event_t * e)
+void serial_open_clicked(lv_event_t *e)
+{
+	int serial_fd;
+	char port_name[64] = {0};
+	serial_manage_widgets_t *widgets = lv_event_get_user_data(e);
+	struct termios new_settings, old_settings;
+
+	lv_dropdown_get_selected_str(widgets->port_select, port_name, sizeof(port_name));
+
+	serial_fd = open(port_name, O_RDWR | O_NOCTTY | O_NDELAY);
+	if (serial_fd < 0)
+	{
+		LV_LOG_ERROR("Failed to open serial");
+		return;
+	}
+
+	memset(&new_settings, 0, sizeof(new_settings));
+	memset(&old_settings, 0, sizeof(old_settings));
+
+	if (tcgetattr(serial_fd, &old_settings) < 0)
+	{
+		LV_LOG_ERROR("Failed to get serial attr\n");
+		goto out_close_serial;
+	}
+
+	new_settings.c_cflag |= CLOCAL | CREAD;
+	new_settings.c_cflag &= ~CSIZE;
+
+	uint32_t baudrate = strtoul(lv_dropdown_get_text(widgets->baudrate_select), NULL, 0);
+	switch (baudrate)
+	{
+	case 1200:
+		cfsetspeed(&new_settings, B1200);
+		break;
+	case 2400:
+		cfsetspeed(&new_settings, B2400);
+		break;
+	case 4800:
+		cfsetspeed(&new_settings, B4800);
+		break;
+	case 9600:
+		cfsetspeed(&new_settings, B9600);
+		break;
+	case 19200:
+		cfsetspeed(&new_settings, B19200);
+		break;
+	case 38400:
+		cfsetspeed(&new_settings, B38400);
+		break;
+	case 57600:
+		cfsetspeed(&new_settings, B57600);
+		break;
+	case 115200:
+		cfsetspeed(&new_settings, B115200);
+		break;
+	case 230400:
+		cfsetspeed(&new_settings, B230400);
+		break;
+	case 460800:
+		cfsetspeed(&new_settings, B460800);
+		break;
+	case 921600:
+		cfsetspeed(&new_settings, B921600);
+		break;
+	default:
+		LV_LOG_ERROR("unsupported baudrate\n");
+		goto out_close_serial;
+	}
+
+	uint8_t databits = strtoul(lv_dropdown_get_text(widgets->databits_select), NULL, 0);
+	switch (databits)
+	{
+	case 5:
+		new_settings.c_cflag |= CS5;
+		break;
+	case 6:
+		new_settings.c_cflag |= CS6;
+		break;
+	case 7:
+		new_settings.c_cflag |= CS7;
+		break;
+	case 8:
+		new_settings.c_cflag |= CS8;
+		break;
+	default:
+		LV_LOG_ERROR("unsupported databits\n");
+		goto out_close_serial;
+	}
+
+	char parity = lv_dropdown_get_text(widgets->parity_select)[0];
+	switch (parity)
+	{
+	case 'N':
+		new_settings.c_cflag &= ~PARENB; /* Clear parity enable */
+		new_settings.c_iflag &= ~INPCK;	 /* Disable input parity check */
+		break;
+	case 'O':
+		new_settings.c_cflag |= (PARODD | PARENB); /* Odd parity instead of even */
+		new_settings.c_iflag |= INPCK;			   /* Enable input parity check */
+		break;
+	case 'E':
+		new_settings.c_cflag |= PARENB;	 /* Enable parity */
+		new_settings.c_cflag &= ~PARODD; /* Even parity instead of odd */
+		new_settings.c_iflag |= INPCK;	 /* Enable input parity check */
+		break;
+	case 'M':
+		new_settings.c_cflag |= PARENB; /* Enable parity */
+		new_settings.c_cflag |= CMSPAR; /* Stick parity instead */
+		new_settings.c_cflag |= PARODD; /* Even parity instead of odd */
+		new_settings.c_iflag |= INPCK;	/* Enable input parity check */
+		break;
+	case 'S':
+		new_settings.c_cflag |= PARENB;	 /* Enable parity */
+		new_settings.c_cflag |= CMSPAR;	 /* Stick parity instead */
+		new_settings.c_cflag &= ~PARODD; /* Even parity instead of odd */
+		new_settings.c_iflag |= INPCK;	 /* Enable input parity check */
+		break;
+	default:
+		LV_LOG_ERROR("unsupported parity\n");
+		goto out_close_serial;
+	}
+
+	if (!strcmp(lv_dropdown_get_text(widgets->hardflow_select), "true"))
+		new_settings.c_cflag |= CRTSCTS;
+	else
+   		new_settings.c_cflag &= ~CRTSCTS;
+
+	tcflush(serial_fd, TCIOFLUSH);
+
+	if (tcsetattr(serial_fd, TCSANOW, &new_settings) != 0)
+	{
+		LV_LOG_ERROR("setattr failed\n");
+		goto out_close_serial;
+	}
+
+	widgets->serial_fd = serial_fd;
+
+	return;
+
+out_close_serial:
+	close(serial_fd);
+
+	return;
+}
+
+void serial_send_clicked(lv_event_t *e)
 {
 	// Your code here
 }

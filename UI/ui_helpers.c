@@ -157,17 +157,17 @@ void _ui_anim_callback_set_image_frame(lv_anim_t * a, int32_t v)
     lv_img_set_src(usr->target, usr->imgset[v]);
 }
 
-int32_t _ui_anim_callback_get_x(lv_anim_t * a)
-{
-    ui_anim_user_data_t * usr = (ui_anim_user_data_t *)a->user_data;
-    return lv_obj_get_x_aligned(usr->target);
-}
+// int32_t _ui_anim_callback_get_x(lv_anim_t * a)
+// {
+//     ui_anim_user_data_t * usr = (ui_anim_user_data_t *)a->user_data;
+//     return lv_obj_get_x_aligned(usr->target);
+// }
 
-int32_t _ui_anim_callback_get_y(lv_anim_t * a)
-{
-    ui_anim_user_data_t * usr = (ui_anim_user_data_t *)a->user_data;
-    return lv_obj_get_y_aligned(usr->target);
-}
+// int32_t _ui_anim_callback_get_y(lv_anim_t * a)
+// {
+//     ui_anim_user_data_t * usr = (ui_anim_user_data_t *)a->user_data;
+//     return lv_obj_get_y_aligned(usr->target);
+// }
 
 int32_t _ui_anim_callback_get_width(lv_anim_t * a)
 {

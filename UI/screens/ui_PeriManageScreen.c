@@ -123,14 +123,14 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_add_flag(ui_SerialOpenBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SerialOpenBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_SerialSendBt = lv_btn_create(ui_PeriManageScreen);
-    lv_obj_set_width(ui_SerialSendBt, 100);
-    lv_obj_set_height(ui_SerialSendBt, 99);
-    lv_obj_set_x(ui_SerialSendBt, -186);
-    lv_obj_set_y(ui_SerialSendBt, 56);
-    lv_obj_set_align(ui_SerialSendBt, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_SerialSendBt, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
-    lv_obj_clear_flag(ui_SerialSendBt, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_SerialSendBtn = lv_btn_create(ui_PeriManageScreen);
+    lv_obj_set_width(ui_SerialSendBtn, 100);
+    lv_obj_set_height(ui_SerialSendBtn, 99);
+    lv_obj_set_x(ui_SerialSendBtn, -186);
+    lv_obj_set_y(ui_SerialSendBtn, 56);
+    lv_obj_set_align(ui_SerialSendBtn, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_SerialSendBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_SerialSendBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_SerialReadPanel = lv_obj_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SerialReadPanel, 502);
@@ -373,6 +373,18 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_Label21, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label21, "Value");
 
-    lv_obj_add_event_cb(ui_SerialSendBt, ui_event_SerialSendBt, LV_EVENT_ALL, NULL);
+    serial_widgets.port_select = ui_SerialPortSelect;
+    serial_widgets.baudrate_select = ui_SerialBaudrateSelect;
+    serial_widgets.databits_select = ui_SerialDatabitsSelect;
+    serial_widgets.stopbits_select = ui_SerialStopbitsSelect;
+    serial_widgets.parity_select = ui_SerialParitySelect;
+    serial_widgets.hardflow_select = ui_SerialFlowControlSelect;
+    serial_widgets.open_btn = ui_SerialOpenBtn;
+    serial_widgets.send_btn = ui_SerialSendBtn;
+    serial_widgets.read_panel = ui_SerialReadPanel;
+    serial_widgets.send_text = ui_SerialSendTextArea;
+
+    lv_obj_add_event_cb(ui_SerialOpenBtn, ui_event_SerialOpenBtn, LV_EVENT_ALL, &serial_widgets);
+    lv_obj_add_event_cb(ui_SerialSendBtn, ui_event_SerialSendBt, LV_EVENT_ALL, NULL);
 
 }

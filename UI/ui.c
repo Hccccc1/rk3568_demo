@@ -24,9 +24,10 @@ lv_obj_t * ui_Label4;
 lv_obj_t * ui_Label7;
 lv_obj_t * ui_Label8;
 lv_obj_t * ui_Label9;
+void ui_event_SerialOpenBtn(lv_event_t * e);
 lv_obj_t * ui_SerialOpenBtn;
 void ui_event_SerialSendBt(lv_event_t * e);
-lv_obj_t * ui_SerialSendBt;
+lv_obj_t * ui_SerialSendBtn;
 lv_obj_t * ui_SerialReadPanel;
 lv_obj_t * ui_WifiScanBtn;
 lv_obj_t * ui_WifiSwitch;
@@ -75,6 +76,8 @@ lv_obj_t * ui_TextArea8;
 lv_obj_t * ui_Switch2;
 lv_obj_t * ui____initial_actions0;
 
+serial_manage_widgets_t serial_widgets;
+
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 32
     #error "LV_COLOR_DEPTH should be 32bit to match SquareLine Studio's settings"
@@ -86,6 +89,15 @@ lv_obj_t * ui____initial_actions0;
 ///////////////////// ANIMATIONS ////////////////////
 
 ///////////////////// FUNCTIONS ////////////////////
+void ui_event_SerialOpenBtn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        serial_open_clicked(e);
+    }
+}
+
 void ui_event_SerialSendBt(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
