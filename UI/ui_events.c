@@ -3,6 +3,7 @@
 // LVGL version: 8.3.4
 // Project name: SquareLine_Project
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <termios.h>
@@ -16,7 +17,8 @@ void serial_open_clicked(lv_event_t *e)
 {
 	int serial_fd;
 	char port_name[64] = {0};
-	serial_manage_widgets_t *widgets = lv_event_get_user_data(e);
+	char buf[128] = {0};
+	serial_widgets_t *widgets = lv_event_get_user_data(e);
 	struct termios new_settings, old_settings;
 
 	lv_dropdown_get_selected_str(widgets->port_select, port_name, sizeof(port_name));
@@ -40,7 +42,9 @@ void serial_open_clicked(lv_event_t *e)
 	new_settings.c_cflag |= CLOCAL | CREAD;
 	new_settings.c_cflag &= ~CSIZE;
 
-	uint32_t baudrate = strtoul(lv_dropdown_get_text(widgets->baudrate_select), NULL, 0);
+	lv_dropdown_get_selected_str(widgets->baudrate_select, buf, sizeof(buf));
+	uint32_t baudrate = strtoul(buf, NULL, 0);
+
 	switch (baudrate)
 	{
 	case 1200:
@@ -81,7 +85,10 @@ void serial_open_clicked(lv_event_t *e)
 		goto out_close_serial;
 	}
 
-	uint8_t databits = strtoul(lv_dropdown_get_text(widgets->databits_select), NULL, 0);
+	memset(buf, 0, sizeof(buf));
+
+	lv_dropdown_get_selected_str(widgets->databits_select, buf, sizeof(buf));
+	uint32_t databits = strtoul(buf, NULL, 0);
 	switch (databits)
 	{
 	case 5:
@@ -101,7 +108,10 @@ void serial_open_clicked(lv_event_t *e)
 		goto out_close_serial;
 	}
 
-	char parity = lv_dropdown_get_text(widgets->parity_select)[0];
+	memset(buf, 0, sizeof(buf));
+
+	lv_dropdown_get_selected_str(widgets->databits_select, buf, sizeof(buf));
+	char parity = buf[0];
 	switch (parity)
 	{
 	case 'N':
@@ -134,10 +144,13 @@ void serial_open_clicked(lv_event_t *e)
 		goto out_close_serial;
 	}
 
-	if (!strcmp(lv_dropdown_get_text(widgets->hardflow_select), "true"))
+	memset(buf, 0, sizeof(buf));
+	lv_dropdown_get_selected_str(widgets->hardflow_select, buf, sizeof(buf));
+
+	if (!strcmp(buf, "true"))
 		new_settings.c_cflag |= CRTSCTS;
 	else
-   		new_settings.c_cflag &= ~CRTSCTS;
+		new_settings.c_cflag &= ~CRTSCTS;
 
 	tcflush(serial_fd, TCIOFLUSH);
 
@@ -160,4 +173,151 @@ out_close_serial:
 void serial_send_clicked(lv_event_t *e)
 {
 	// Your code here
+	serial_widgets_t *widgets = lv_event_get_user_data(e);
+
+	// write(serial_widgets->serial_fd, )
+
+	if (widgets->serial_fd > 0)
+	{
+		const char *buf = lv_textarea_get_text(widgets->send_text);
+		write(widgets->serial_fd, buf, strlen(buf));
+	}
+	else
+	{
+		LV_LOG_WARN("Serial not connected\n");
+	}
+}
+
+void backlight_value_changed(lv_event_t *e)
+{
+	lv_obj_t *slider = lv_event_get_target(e);
+	lv_obj_t *label = lv_event_get_user_data(e);
+	char buf[64];
+	int32_t value = lv_slider_get_value(slider);
+	lv_snprintf(buf, sizeof(buf), "%d%%", value);
+	lv_label_set_text(label, buf);
+	lv_obj_align_to(label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+	lv_snprintf(buf, sizeof(buf), "echo %u > /sys/class/backlight/backlight/brightness", (uint32_t)0xff * value / 100);
+
+	LV_LOG_WARN("execute %s\n", buf);
+
+	// system(buf);
+}
+
+void wifi_scan_clicked(lv_event_t *e)
+{
+	uint16_t ssid_index = 0;
+	char *p_n, *p_ssid_start, *p_ssid_end;
+	FILE *fp;
+	char buf[BUFSIZ] = {0}, ssid_buf[128] = {0};
+	wifi_widgets_t *widgets = lv_event_get_user_data(e);
+
+	if ((fp = popen("wpa_cli scan", "r")) == NULL)
+	{
+		LV_LOG_ERROR("Failed to scan wifi");
+		return;
+	}
+
+	while (fgets(buf, sizeof(buf), fp) != NULL) // fgets()此处是否会阻塞？
+	{
+		if (strstr(buf, "Selected interface") != NULL)
+			continue;
+
+		if (strstr(buf, "OK") != NULL)
+		{
+			LV_LOG_ERROR("close fp and return\n");
+			pclose(fp);
+			return;
+		}
+	}
+
+	pclose(fp);
+
+	fp = popen("wpa_cli scan_r", "r");
+	if (!fp)
+	{
+		LV_LOG_ERROR("Failed to get scan result\n");
+		return;
+	}
+
+	memset(buf, 0, sizeof(buf));
+	lv_dropdown_clear_options(widgets->ssid_select);
+
+	while (fgets(buf, BUFSIZ, fp) != NULL)
+	{
+		if (strstr(buf, "bssid") != 0 || strstr(buf, "Selected interface") != 0)
+			continue;
+
+		if ((p_n = strstr(buf, "\n")) != NULL) // 注意，\n是接收到的最后一个字符
+		{
+			p_ssid_end = p_n - 1; //'\n前面一个字符'
+			while (*p_n != '\t')  // 中间是用'\t'制表符隔开的
+				p_n--;
+
+			p_ssid_start = p_n; //'\t'
+			strncpy(ssid_buf, (p_ssid_start + 1), (p_ssid_end - p_ssid_start));
+		}
+
+		// printf("ssid: %u -> %s\n", ssid_index - 1, ssid_buf[ssid_index - 1]);
+
+		lv_dropdown_add_option(widgets->ssid_select, ssid_buf, ssid_index);
+		ssid_index++;
+	}
+
+	pclose(fp);
+}
+
+static int wifi_set_ssid_password(wifi_widgets_t *widgets)
+{
+	
+}
+
+void wifi_connect_clicked(lv_event_t *e)
+{
+	FILE *fp;
+	char buf[128] = {0};
+	char cmd[128] = "wpa_cli -i wlan0 set_network 0 ssid ";
+	wifi_widgets_t *widgets = lv_event_get_user_data(e);
+	// strcat(cmd, "");
+	// strcat(cmd, " '\"");
+	// strcat(cmd, lv_dropdown_get_text(widgets->ssid_select));
+	// strcat(cmd, "\"'");
+
+	lv_dropdown_get_selected_str(widgets->ssid_select, buf, sizeof(buf));
+
+	strcat(cmd, "'\"");
+	strcat(cmd, buf);
+	strcat(cmd, "\"'");
+	LV_LOG_INFO("%s\n", cmd);
+
+	if ((fp = popen(cmd, "r")) == NULL)
+	{
+		LOG_LOG_ERROR("set ssid failed\n");
+		exit(1);
+	}
+
+	while (fgets(buf, sizeof(buf), fp) != NULL)
+	{
+		if (strstr(buf, "Selected interface") != NULL)
+			continue;
+			
+		if (strstr(buf, "OK") != NULL)
+		{
+			pclose(fp);
+			return 1;
+		}
+	}
+	pclose(fp);
+	return 0;
+}
+
+void wifi_switch_value_changed(lv_event_t *e)
+{
+	lv_obj_t *obj = lv_event_get_target(e);
+
+	if (lv_obj_has_state(obj, LV_STATE_CHECKED))
+		system("wpa_supplicant -Dnl80211 -iwlan0 -B -c /etc/wpa_supplicant.conf");
+	else
+		system("killall wpa_supplicant");
 }

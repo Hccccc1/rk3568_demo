@@ -12,8 +12,7 @@
 extern "C" {
 #endif
 
-typedef struct
-{
+typedef struct {
     int serial_fd;
     lv_obj_t *port_select;
     lv_obj_t *baudrate_select;
@@ -25,10 +24,25 @@ typedef struct
     lv_obj_t *send_btn;
     lv_obj_t *read_panel;
     lv_obj_t *send_text;
-} serial_manage_widgets_t;
+} serial_widgets_t;
+
+typedef struct {
+    lv_obj_t *wifi_switch;
+    lv_obj_t *scan_btn;
+    lv_obj_t *ssid_select;
+    lv_obj_t *password_text;
+    lv_obj_t *encrypt_select;
+    lv_obj_t *connect_btn;
+} wifi_widgets_t;
 
 void serial_open_clicked(lv_event_t * e);
 void serial_send_clicked(lv_event_t * e);
+
+void backlight_value_changed(lv_event_t * e);
+
+void wifi_scan_clicked(lv_event_t *e);
+void wifi_connect_clicked(lv_event_t *e);
+void wifi_switch_value_changed(lv_event_t *e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

@@ -17,6 +17,7 @@ extern "C" {
 // SCREEN: ui_PeriManageScreen
 void ui_PeriManageScreen_screen_init(void);
 extern lv_obj_t * ui_PeriManageScreen;
+void ui_event_SerialSendTextArea(lv_event_t * e);
 extern lv_obj_t * ui_SerialSendTextArea;
 extern lv_obj_t * ui_PortLabel;
 extern lv_obj_t * ui_SerialPortSelect;
@@ -32,17 +33,22 @@ extern lv_obj_t * ui_Label8;
 extern lv_obj_t * ui_Label9;
 void ui_event_SerialOpenBtn(lv_event_t * e);
 extern lv_obj_t * ui_SerialOpenBtn;
-void ui_event_SerialSendBt(lv_event_t * e);
+void ui_event_SerialSendBtn(lv_event_t * e);
 extern lv_obj_t * ui_SerialSendBtn;
 extern lv_obj_t * ui_SerialReadPanel;
+void ui_event_WifiScanBtn(lv_event_t * e);
 extern lv_obj_t * ui_WifiScanBtn;
+void ui_event_WifiSwitch(lv_event_t * e);
 extern lv_obj_t * ui_WifiSwitch;
 extern lv_obj_t * ui_Label1;
 extern lv_obj_t * ui_WifiSSIDSelect;
+void ui_event_WifiPasswordTextArea(lv_event_t * e);
 extern lv_obj_t * ui_WifiPasswordTextArea;
 extern lv_obj_t * ui_WifiEncryptMethodSelect;
+void ui_event_WifiConnectBtn(lv_event_t * e);
 extern lv_obj_t * ui_WifiConnectBtn;
 extern lv_obj_t * ui_Label11;
+void ui_event_BacklightSlider(lv_event_t * e);
 extern lv_obj_t * ui_BacklightSlider;
 extern lv_obj_t * ui_Label12;
 extern lv_obj_t * ui_Label13;
@@ -64,6 +70,7 @@ extern lv_obj_t * ui_GPIODirectionSelect;
 extern lv_obj_t * ui_Label20;
 extern lv_obj_t * ui_GPIOValueSelect;
 extern lv_obj_t * ui_Label21;
+extern lv_obj_t * ui_PeriKeyboard;
 // SCREEN: ui_EthManageScreen
 void ui_EthManageScreen_screen_init(void);
 extern lv_obj_t * ui_EthManageScreen;
@@ -81,7 +88,8 @@ extern lv_obj_t * ui_TextArea8;
 extern lv_obj_t * ui_Switch2;
 extern lv_obj_t * ui____initial_actions0;
 
-extern serial_manage_widgets_t serial_widgets;
+extern serial_widgets_t serial_widgets;
+extern wifi_widgets_t wifi_widgets;
 
 void ui_init(void);
 

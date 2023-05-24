@@ -11,6 +11,7 @@
 // SCREEN: ui_PeriManageScreen
 void ui_PeriManageScreen_screen_init(void);
 lv_obj_t * ui_PeriManageScreen;
+void ui_event_SerialSendTextArea(lv_event_t * e);
 lv_obj_t * ui_SerialSendTextArea;
 lv_obj_t * ui_PortLabel;
 lv_obj_t * ui_SerialPortSelect;
@@ -26,17 +27,22 @@ lv_obj_t * ui_Label8;
 lv_obj_t * ui_Label9;
 void ui_event_SerialOpenBtn(lv_event_t * e);
 lv_obj_t * ui_SerialOpenBtn;
-void ui_event_SerialSendBt(lv_event_t * e);
+void ui_event_SerialSendBtn(lv_event_t * e);
 lv_obj_t * ui_SerialSendBtn;
 lv_obj_t * ui_SerialReadPanel;
+void ui_event_WifiScanBtn(lv_event_t * e);
 lv_obj_t * ui_WifiScanBtn;
+void ui_event_WifiSwitch(lv_event_t * e);
 lv_obj_t * ui_WifiSwitch;
 lv_obj_t * ui_Label1;
 lv_obj_t * ui_WifiSSIDSelect;
+void ui_event_WifiPasswordTextArea(lv_event_t * e);
 lv_obj_t * ui_WifiPasswordTextArea;
 lv_obj_t * ui_WifiEncryptMethodSelect;
+void ui_event_WifiConnectBtn(lv_event_t * e);
 lv_obj_t * ui_WifiConnectBtn;
 lv_obj_t * ui_Label11;
+void ui_event_BacklightSlider(lv_event_t * e);
 lv_obj_t * ui_BacklightSlider;
 lv_obj_t * ui_Label12;
 lv_obj_t * ui_Label13;
@@ -59,6 +65,8 @@ lv_obj_t * ui_Label20;
 lv_obj_t * ui_GPIOValueSelect;
 lv_obj_t * ui_Label21;
 
+lv_obj_t * ui_PeriKeyboard;
+
 // SCREEN: ui_EthManageScreen
 void ui_EthManageScreen_screen_init(void);
 lv_obj_t * ui_EthManageScreen;
@@ -76,7 +84,8 @@ lv_obj_t * ui_TextArea8;
 lv_obj_t * ui_Switch2;
 lv_obj_t * ui____initial_actions0;
 
-serial_manage_widgets_t serial_widgets;
+serial_widgets_t serial_widgets;
+wifi_widgets_t wifi_widgets;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 32
@@ -92,18 +101,86 @@ serial_manage_widgets_t serial_widgets;
 void ui_event_SerialOpenBtn(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
+    
+    if(event_code == LV_EVENT_CLICKED)
         serial_open_clicked(e);
+}
+
+void ui_event_SerialSendBtn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    
+    if(event_code == LV_EVENT_CLICKED)
+        serial_send_clicked(e);
+}
+
+void ui_event_SerialSendTextArea(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    lv_obj_t *target = lv_event_get_target(e);
+    lv_obj_t *keyboard = lv_event_get_user_data(e);
+
+    if (event_code == LV_EVENT_FOCUSED) {
+        lv_keyboard_set_textarea(keyboard, target);
+        lv_obj_clear_flag(keyboard, LV_OBJ_FLAG_HIDDEN);
+    }
+
+    if (event_code == LV_EVENT_DEFOCUSED)
+    {
+        lv_keyboard_set_textarea(keyboard, NULL);
+        lv_obj_add_flag(keyboard, LV_OBJ_FLAG_HIDDEN);
     }
 }
 
-void ui_event_SerialSendBt(lv_event_t * e)
+void ui_event_BacklightSlider(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        serial_send_clicked(e);
+    
+    if(event_code == LV_EVENT_VALUE_CHANGED)
+        backlight_value_changed(e);
+}
+
+void ui_event_WifiScanBtn(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    
+    if(event_code == LV_EVENT_CLICKED)
+        wifi_scan_clicked(e);
+}
+
+void ui_event_WifiConnectBtn(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    
+    if(event_code == LV_EVENT_CLICKED)
+        wifi_connect_clicked(e);
+}
+
+void ui_event_WifiSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    
+    if(event_code == LV_EVENT_VALUE_CHANGED)
+        wifi_switch_value_changed(e);
+}
+
+void ui_event_WifiPasswordTextArea(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    lv_obj_t *target = lv_event_get_target(e);
+    lv_obj_t *keyboard = lv_event_get_user_data(e);
+
+    if (event_code == LV_EVENT_FOCUSED) {
+        lv_keyboard_set_textarea(keyboard, target);
+        lv_obj_clear_flag(keyboard, LV_OBJ_FLAG_HIDDEN);
+    }
+
+    if (event_code == LV_EVENT_DEFOCUSED)
+    {
+        lv_keyboard_set_textarea(keyboard, NULL);
+        lv_obj_add_flag(keyboard, LV_OBJ_FLAG_HIDDEN);
     }
 }
 
