@@ -268,24 +268,20 @@ void wifi_scan_clicked(lv_event_t *e)
 	pclose(fp);
 }
 
-static int wifi_set_ssid_password(wifi_widgets_t *widgets)
-{
-	
-}
-
 void wifi_connect_clicked(lv_event_t *e)
 {
 	FILE *fp;
+	const char *set_ssid = "wpa_cli -i wlan0 set_network 0 ssid ";
+	const char *set_password = "wpa_cli -i wlan0 set_network 0 psk ";
 	char buf[128] = {0};
-	char cmd[128] = "wpa_cli -i wlan0 set_network 0 ssid ";
+	char *cmd = NULL;
 	wifi_widgets_t *widgets = lv_event_get_user_data(e);
-	// strcat(cmd, "");
-	// strcat(cmd, " '\"");
-	// strcat(cmd, lv_dropdown_get_text(widgets->ssid_select));
-	// strcat(cmd, "\"'");
+
+	cmd = (char *)malloc(sizeof(char) * 128);
 
 	lv_dropdown_get_selected_str(widgets->ssid_select, buf, sizeof(buf));
 
+	strcat(cmd, set_ssid);
 	strcat(cmd, "'\"");
 	strcat(cmd, buf);
 	strcat(cmd, "\"'");
@@ -293,22 +289,49 @@ void wifi_connect_clicked(lv_event_t *e)
 
 	if ((fp = popen(cmd, "r")) == NULL)
 	{
-		LOG_LOG_ERROR("set ssid failed\n");
-		exit(1);
+		LV_LOG_ERROR("set ssid failed\n");
+		return;
 	}
 
 	while (fgets(buf, sizeof(buf), fp) != NULL)
 	{
-		if (strstr(buf, "Selected interface") != NULL)
-			continue;
-			
-		if (strstr(buf, "OK") != NULL)
+		if (strstr(buf, "FAIL") != NULL)
 		{
+			LV_LOG_ERROR("Failed to set ssid\n");
 			pclose(fp);
-			return 1;
+			return;
 		}
 	}
 	pclose(fp);
+	
+	memset(buf, 0, sizeof(buf));
+	memset(cmd, 0, sizeof(cmd));
+
+	lv_dropdown_get_selected_str(widgets->password_text, buf, sizeof(buf));
+
+	strcat(cmd, set_password);
+	strcat(cmd, "'\"");
+	strcat(cmd, buf);
+	strcat(cmd, "\"'");
+	LV_LOG_INFO("%s\n", cmd);
+
+	if ((fp = popen(cmd, "r")) == NULL) {
+		LV_LOG_ERROR("Set psk failed\b");
+		return;
+	}
+
+	while (fgets(buf, sizeof(buf), fp) != NULL) {
+		if (strstr(buf, "FAIL") != NULL) {
+			LV_LOG_ERROR("Failed to set psk\n");
+			pclose(fp);
+			return;
+		}
+	}
+
+	pclose(fp);
+
+	free(cmd);
+
 	return 0;
 }
 
