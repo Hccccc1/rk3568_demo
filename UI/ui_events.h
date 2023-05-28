@@ -35,6 +35,21 @@ typedef struct {
     lv_obj_t *connect_btn;
 } wifi_widgets_t;
 
+typedef struct {
+    uint8_t is_connected;
+    lv_obj_t *recv_select;
+    lv_obj_t *protocol_select;
+    lv_obj_t *r_ip_text;    // remote ip
+    lv_obj_t *l_ip_text;    // local ip
+    lv_obj_t *r_port_text;  // remote port
+    lv_obj_t *l_port_text;  // local port
+    lv_obj_t *connect_btn;
+    lv_obj_t *shutdown_btn;
+    lv_obj_t *send_text;
+    lv_obj_t *send_btn;
+} eth_widgets_t;
+
+
 void serial_open_clicked(lv_event_t * e);
 void serial_send_clicked(lv_event_t * e);
 
@@ -43,6 +58,10 @@ void backlight_value_changed(lv_event_t * e);
 void wifi_scan_clicked(lv_event_t *e);
 void wifi_connect_clicked(lv_event_t *e);
 void wifi_switch_value_changed(lv_event_t *e);
+
+void eth_send_btn_clicked(lv_event_t * e);
+void eth_connect_btn_clicked(lv_event_t * e);
+void eth_shutdown_btn_clicked(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

@@ -11,7 +11,6 @@
 // SCREEN: ui_PeriManageScreen
 void ui_PeriManageScreen_screen_init(void);
 lv_obj_t * ui_PeriManageScreen;
-void ui_event_SerialSendTextArea(lv_event_t * e);
 lv_obj_t * ui_SerialSendTextArea;
 lv_obj_t * ui_PortLabel;
 lv_obj_t * ui_SerialPortSelect;
@@ -36,7 +35,6 @@ void ui_event_WifiSwitch(lv_event_t * e);
 lv_obj_t * ui_WifiSwitch;
 lv_obj_t * ui_Label1;
 lv_obj_t * ui_WifiSSIDSelect;
-void ui_event_WifiPasswordTextArea(lv_event_t * e);
 lv_obj_t * ui_WifiPasswordTextArea;
 lv_obj_t * ui_WifiEncryptMethodSelect;
 void ui_event_WifiConnectBtn(lv_event_t * e);
@@ -65,27 +63,42 @@ lv_obj_t * ui_Label20;
 lv_obj_t * ui_GPIOValueSelect;
 lv_obj_t * ui_Label21;
 
+void ui_event_PeriKeyboard(lv_event_t * e);
 lv_obj_t * ui_PeriKeyboard;
 
 // SCREEN: ui_EthManageScreen
 void ui_EthManageScreen_screen_init(void);
 lv_obj_t * ui_EthManageScreen;
-lv_obj_t * ui_TextArea5;
-lv_obj_t * ui_Label3;
-lv_obj_t * ui_Dropdown1;
+lv_obj_t * ui_EthRecvPanel;
 lv_obj_t * ui_Label5;
-lv_obj_t * ui_TextArea6;
+lv_obj_t * ui_EthProtocolSelect;
 lv_obj_t * ui_Label6;
-lv_obj_t * ui_TextArea7;
-lv_obj_t * ui_Button3;
-lv_obj_t * ui_Button5;
-lv_obj_t * ui_Button6;
-lv_obj_t * ui_TextArea8;
-lv_obj_t * ui_Switch2;
+lv_obj_t * ui_EthRemoteIPText;
+lv_obj_t * ui_Label18;
+lv_obj_t * ui_EthLocalIPText;
+lv_obj_t * ui_EthRemotePortText;
+lv_obj_t * ui_EthLocalPortText;
+void ui_event_EthConnectBtn(lv_event_t * e);
+lv_obj_t * ui_EthConnectBtn;
+void ui_event_EthShutdownBtn(lv_event_t * e);
+lv_obj_t * ui_EthShutdownBtn;
+lv_obj_t * ui_EthSendText;
+void ui_event_EthSendBtn(lv_event_t * e);
+lv_obj_t * ui_EthSendBtn;
 lv_obj_t * ui____initial_actions0;
+
+void ui_event_EthKeyboard(lv_event_t * e);
+lv_obj_t * ui_EthKeyboard;
+
+void ui_event_EthRemoteIPText(lv_event_t * e);
+void ui_event_EthRemotePortText(lv_event_t * e);
+void ui_event_EthLocalIPText(lv_event_t * e);
+void ui_event_EthLocalPortText(lv_event_t * e);
+void ui_event_EthSendText(lv_event_t * e);
 
 serial_widgets_t serial_widgets;
 wifi_widgets_t wifi_widgets;
+eth_widgets_t eth_widgets;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 32
@@ -114,7 +127,7 @@ void ui_event_SerialSendBtn(lv_event_t * e)
         serial_send_clicked(e);
 }
 
-void ui_event_SerialSendTextArea(lv_event_t * e)
+void ui_event_PeriKeyboard(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 
@@ -165,7 +178,34 @@ void ui_event_WifiSwitch(lv_event_t * e)
         wifi_switch_value_changed(e);
 }
 
-void ui_event_WifiPasswordTextArea(lv_event_t * e)
+void ui_event_EthSendBtn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        eth_send_btn_clicked(e);
+    }
+}
+
+void ui_event_EthConnectBtn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        eth_connect_btn_clicked(e);
+    }
+}
+
+void ui_event_EthShutdownBtn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        eth_shutdown_btn_clicked(e);
+    }
+}
+
+void ui_event_EthKeyboard(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 
@@ -195,5 +235,5 @@ void ui_init(void)
     ui_PeriManageScreen_screen_init();
     ui_EthManageScreen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
-    lv_disp_load_scr(ui_PeriManageScreen);
+    lv_disp_load_scr(ui_EthManageScreen);
 }

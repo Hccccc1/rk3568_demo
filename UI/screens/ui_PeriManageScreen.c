@@ -376,6 +376,7 @@ void ui_PeriManageScreen_screen_init(void)
     lv_label_set_text(ui_Label21, "Value");
 
     ui_PeriKeyboard = lv_keyboard_create(ui_PeriManageScreen);
+    lv_obj_add_flag(ui_PeriKeyboard, LV_OBJ_FLAG_HIDDEN);
 
     serial_widgets.port_select = ui_SerialPortSelect;
     serial_widgets.baudrate_select = ui_SerialBaudrateSelect;
@@ -390,7 +391,7 @@ void ui_PeriManageScreen_screen_init(void)
 
     lv_obj_add_event_cb(ui_SerialOpenBtn, ui_event_SerialOpenBtn, LV_EVENT_ALL, &serial_widgets);
     lv_obj_add_event_cb(ui_SerialSendBtn, ui_event_SerialSendBtn, LV_EVENT_ALL, &serial_widgets);
-    lv_obj_add_event_cb(ui_SerialSendTextArea, ui_event_SerialSendTextArea, LV_EVENT_ALL, ui_PeriKeyboard);
+    lv_obj_add_event_cb(ui_SerialSendTextArea, ui_event_PeriKeyboard, LV_EVENT_ALL, ui_PeriKeyboard);
 
     lv_obj_add_event_cb(ui_BacklightSlider, ui_event_BacklightSlider, LV_EVENT_ALL, ui_Label13);
 
@@ -404,5 +405,5 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_add_event_cb(ui_WifiSwitch, ui_event_WifiSwitch, LV_EVENT_ALL, &wifi_widgets);
     lv_obj_add_event_cb(ui_WifiScanBtn, ui_event_WifiScanBtn, LV_EVENT_ALL, &wifi_widgets);
     lv_obj_add_event_cb(ui_WifiConnectBtn, ui_event_WifiConnectBtn, LV_EVENT_ALL, &wifi_widgets);
-    lv_obj_add_event_cb(ui_WifiPasswordTextArea, ui_event_WifiPasswordTextArea, LV_EVENT_ALL, ui_PeriKeyboard);
+    lv_obj_add_event_cb(ui_WifiPasswordTextArea, ui_event_PeriKeyboard, LV_EVENT_ALL, ui_PeriKeyboard);
 }

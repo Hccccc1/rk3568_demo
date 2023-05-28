@@ -10,99 +10,135 @@ void ui_EthManageScreen_screen_init(void)
     ui_EthManageScreen = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_EthManageScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_TextArea5 = lv_textarea_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_TextArea5, 823);
-    lv_obj_set_height(ui_TextArea5, 160);
-    lv_obj_set_x(ui_TextArea5, -151);
-    lv_obj_set_y(ui_TextArea5, -50);
-    lv_obj_set_align(ui_TextArea5, LV_ALIGN_CENTER);
-    lv_textarea_set_placeholder_text(ui_TextArea5, "Placeholder...");
-
-    ui_Label3 = lv_label_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_Label3, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_Label3, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Label3, -526);
-    lv_obj_set_y(ui_Label3, 85);
-    lv_obj_set_align(ui_Label3, LV_ALIGN_CENTER);
-
-    ui_Dropdown1 = lv_dropdown_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_Dropdown1, 361);
-    lv_obj_set_height(ui_Dropdown1, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Dropdown1, -285);
-    lv_obj_set_y(ui_Dropdown1, 83);
-    lv_obj_set_align(ui_Dropdown1, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Dropdown1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    ui_EthRecvPanel = lv_obj_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthRecvPanel, 1000);
+    lv_obj_set_height(ui_EthRecvPanel, 300);
+    lv_obj_set_x(ui_EthRecvPanel, 0);
+    lv_obj_set_y(ui_EthRecvPanel, -200);
+    lv_obj_set_align(ui_EthRecvPanel, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_EthRecvPanel, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_Label5 = lv_label_create(ui_EthManageScreen);
     lv_obj_set_width(ui_Label5, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label5, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Label5, -516);
-    lv_obj_set_y(ui_Label5, 147);
+    lv_obj_set_x(ui_Label5, -465);
+    lv_obj_set_y(ui_Label5, 0);
     lv_obj_set_align(ui_Label5, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label5, "Protocol");
 
-    ui_TextArea6 = lv_textarea_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_TextArea6, 150);
-    lv_obj_set_height(ui_TextArea6, 45);
-    lv_obj_set_x(ui_TextArea6, -405);
-    lv_obj_set_y(ui_TextArea6, 146);
-    lv_obj_set_align(ui_TextArea6, LV_ALIGN_CENTER);
-    lv_textarea_set_placeholder_text(ui_TextArea6, "Placeholder...");
+    ui_EthProtocolSelect = lv_dropdown_create(ui_EthManageScreen);
+    lv_dropdown_set_options(ui_EthProtocolSelect, "TCPClient\nTCPServer\nUDP");
+    lv_obj_set_width(ui_EthProtocolSelect, 336);
+    lv_obj_set_height(ui_EthProtocolSelect, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_EthProtocolSelect, -224);
+    lv_obj_set_y(ui_EthProtocolSelect, 0);
+    lv_obj_set_align(ui_EthProtocolSelect, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_EthProtocolSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
     ui_Label6 = lv_label_create(ui_EthManageScreen);
     lv_obj_set_width(ui_Label6, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label6, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Label6, -522);
-    lv_obj_set_y(ui_Label6, 201);
+    lv_obj_set_x(ui_Label6, -465);
+    lv_obj_set_y(ui_Label6, 80);
     lv_obj_set_align(ui_Label6, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label6, "RemoteIP");
 
-    ui_TextArea7 = lv_textarea_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_TextArea7, 150);
-    lv_obj_set_height(ui_TextArea7, 47);
-    lv_obj_set_x(ui_TextArea7, -402);
-    lv_obj_set_y(ui_TextArea7, 206);
-    lv_obj_set_align(ui_TextArea7, LV_ALIGN_CENTER);
-    lv_textarea_set_placeholder_text(ui_TextArea7, "Placeholder...");
+    ui_EthRemoteIPText = lv_textarea_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthRemoteIPText, 150);
+    lv_obj_set_height(ui_EthRemoteIPText, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_EthRemoteIPText, -320);
+    lv_obj_set_y(ui_EthRemoteIPText, 80);
+    lv_obj_set_align(ui_EthRemoteIPText, LV_ALIGN_CENTER);
+    lv_textarea_set_placeholder_text(ui_EthRemoteIPText, "Placeholder...");
 
-    ui_Button3 = lv_btn_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_Button3, 100);
-    lv_obj_set_height(ui_Button3, 50);
-    lv_obj_set_x(ui_Button3, -268);
-    lv_obj_set_y(ui_Button3, 144);
-    lv_obj_set_align(ui_Button3, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Button3, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
-    lv_obj_clear_flag(ui_Button3, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_Label18 = lv_label_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_Label18, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label18, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label18, -465);
+    lv_obj_set_y(ui_Label18, 160);
+    lv_obj_set_align(ui_Label18, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label18, "LocalIP");
 
-    ui_Button5 = lv_btn_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_Button5, 100);
-    lv_obj_set_height(ui_Button5, 50);
-    lv_obj_set_x(ui_Button5, -265);
-    lv_obj_set_y(ui_Button5, 205);
-    lv_obj_set_align(ui_Button5, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Button5, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
-    lv_obj_clear_flag(ui_Button5, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_EthLocalIPText = lv_textarea_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthLocalIPText, 150);
+    lv_obj_set_height(ui_EthLocalIPText, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_EthLocalIPText, -320);
+    lv_obj_set_y(ui_EthLocalIPText, 160);
+    lv_obj_set_align(ui_EthLocalIPText, LV_ALIGN_CENTER);
+    lv_textarea_set_placeholder_text(ui_EthLocalIPText, "Placeholder...");
 
-    ui_Button6 = lv_btn_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_Button6, 100);
-    lv_obj_set_height(ui_Button6, 90);
-    lv_obj_set_x(ui_Button6, -138);
-    lv_obj_set_y(ui_Button6, 172);
-    lv_obj_set_align(ui_Button6, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_Button6, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
-    lv_obj_clear_flag(ui_Button6, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_EthRemotePortText = lv_textarea_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthRemotePortText, 50);
+    lv_obj_set_height(ui_EthRemotePortText, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_EthRemotePortText, -200);
+    lv_obj_set_y(ui_EthRemotePortText, 80);
+    lv_obj_set_align(ui_EthRemotePortText, LV_ALIGN_CENTER);
+    lv_textarea_set_placeholder_text(ui_EthRemotePortText, "Port");
 
-    ui_TextArea8 = lv_textarea_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_TextArea8, 266);
-    lv_obj_set_height(ui_TextArea8, 138);
-    lv_obj_set_x(ui_TextArea8, 92);
-    lv_obj_set_y(ui_TextArea8, 140);
-    lv_obj_set_align(ui_TextArea8, LV_ALIGN_CENTER);
-    lv_textarea_set_placeholder_text(ui_TextArea8, "Placeholder...");
+    ui_EthLocalPortText = lv_textarea_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthLocalPortText, 50);
+    lv_obj_set_height(ui_EthLocalPortText, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_EthLocalPortText, -200);
+    lv_obj_set_y(ui_EthLocalPortText, 160);
+    lv_obj_set_align(ui_EthLocalPortText, LV_ALIGN_CENTER);
+    lv_textarea_set_placeholder_text(ui_EthLocalPortText, "Port");
 
-    ui_Switch2 = lv_switch_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_Switch2, 50);
-    lv_obj_set_height(ui_Switch2, 25);
-    lv_obj_set_x(ui_Switch2, -825);
-    lv_obj_set_y(ui_Switch2, -253);
-    lv_obj_set_align(ui_Switch2, LV_ALIGN_CENTER);
+    ui_EthConnectBtn = lv_btn_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthConnectBtn, 60);
+    lv_obj_set_height(ui_EthConnectBtn, 50);
+    lv_obj_set_x(ui_EthConnectBtn, -90);
+    lv_obj_set_y(ui_EthConnectBtn, 80);
+    lv_obj_set_align(ui_EthConnectBtn, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_EthConnectBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_EthConnectBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    ui_EthShutdownBtn = lv_btn_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthShutdownBtn, 60);
+    lv_obj_set_height(ui_EthShutdownBtn, 50);
+    lv_obj_set_x(ui_EthShutdownBtn, -90);
+    lv_obj_set_y(ui_EthShutdownBtn, 160);
+    lv_obj_set_align(ui_EthShutdownBtn, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_EthShutdownBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_EthShutdownBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    ui_EthSendText = lv_textarea_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthSendText, 400);
+    lv_obj_set_height(ui_EthSendText, 200);
+    lv_obj_set_x(ui_EthSendText, 170);
+    lv_obj_set_y(ui_EthSendText, 86);
+    lv_obj_set_align(ui_EthSendText, LV_ALIGN_CENTER);
+    lv_textarea_set_placeholder_text(ui_EthSendText, "Placeholder...");
+
+    ui_EthSendBtn = lv_btn_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthSendBtn, 100);
+    lv_obj_set_height(ui_EthSendBtn, 200);
+    lv_obj_set_x(ui_EthSendBtn, 443);
+    lv_obj_set_y(ui_EthSendBtn, 80);
+    lv_obj_set_align(ui_EthSendBtn, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_EthSendBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_EthSendBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    
+    ui_EthKeyboard = lv_keyboard_create(ui_EthManageScreen);
+    lv_obj_add_flag(ui_EthKeyboard, LV_OBJ_FLAG_HIDDEN);
+
+    eth_widgets.recv_select = ui_EthRecvPanel;
+    eth_widgets.protocol_select = ui_EthProtocolSelect;
+    eth_widgets.r_ip_text = ui_EthRemoteIPText;
+    eth_widgets.r_port_text = ui_EthRemotePortText;
+    eth_widgets.l_ip_text = ui_EthLocalIPText;
+    eth_widgets.l_port_text = ui_EthLocalPortText;
+    eth_widgets.connect_btn = ui_EthConnectBtn;
+    eth_widgets.shutdown_btn = ui_EthShutdownBtn;
+    eth_widgets.send_text = ui_EthSendText;
+    eth_widgets.send_btn = ui_SerialSendBtn;
+
+    lv_obj_add_event_cb(ui_EthConnectBtn, ui_event_EthConnectBtn, LV_EVENT_ALL, &eth_widgets);
+    lv_obj_add_event_cb(ui_EthShutdownBtn, ui_event_EthShutdownBtn, LV_EVENT_ALL, &eth_widgets);
+    lv_obj_add_event_cb(ui_EthSendBtn, ui_event_EthSendBtn, LV_EVENT_ALL, &eth_widgets);
+
+    lv_obj_add_event_cb(ui_EthRemoteIPText, ui_event_EthKeyboard, LV_EVENT_ALL, ui_EthKeyboard);
+    lv_obj_add_event_cb(ui_EthRemotePortText, ui_event_EthKeyboard, LV_EVENT_ALL, ui_EthKeyboard);
+    lv_obj_add_event_cb(ui_EthLocalIPText, ui_event_EthKeyboard, LV_EVENT_ALL, ui_EthKeyboard);
+    lv_obj_add_event_cb(ui_EthLocalPortText, ui_event_EthKeyboard, LV_EVENT_ALL, ui_EthKeyboard);
+    lv_obj_add_event_cb(ui_EthSendText, ui_event_EthKeyboard, LV_EVENT_ALL, ui_EthKeyboard);
 }
