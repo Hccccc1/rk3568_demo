@@ -49,6 +49,9 @@ typedef struct {
     lv_obj_t *send_btn;
 } eth_widgets_t;
 
+typedef struct {
+
+} refresh_widgets_t;
 
 void serial_open_clicked(lv_event_t * e);
 void serial_send_clicked(lv_event_t * e);
