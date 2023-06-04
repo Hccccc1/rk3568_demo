@@ -10,13 +10,13 @@ void ui_EthManageScreen_screen_init(void)
     ui_EthManageScreen = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_EthManageScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_EthRecvPanel = lv_obj_create(ui_EthManageScreen);
-    lv_obj_set_width(ui_EthRecvPanel, 1000);
-    lv_obj_set_height(ui_EthRecvPanel, 300);
-    lv_obj_set_x(ui_EthRecvPanel, 0);
-    lv_obj_set_y(ui_EthRecvPanel, -200);
-    lv_obj_set_align(ui_EthRecvPanel, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_EthRecvPanel, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_EthRecvText = lv_textarea_create(ui_EthManageScreen);
+    lv_obj_set_width(ui_EthRecvText, 1000);
+    lv_obj_set_height(ui_EthRecvText, 300);
+    lv_obj_set_x(ui_EthRecvText, 0);
+    lv_obj_set_y(ui_EthRecvText, -200);
+    lv_obj_set_align(ui_EthRecvText, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_EthRecvText, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_Label5 = lv_label_create(ui_EthManageScreen);
     lv_obj_set_width(ui_Label5, LV_SIZE_CONTENT);   /// 1
@@ -121,7 +121,7 @@ void ui_EthManageScreen_screen_init(void)
     ui_EthKeyboard = lv_keyboard_create(ui_EthManageScreen);
     lv_obj_add_flag(ui_EthKeyboard, LV_OBJ_FLAG_HIDDEN);
 
-    eth_widgets.recv_select = ui_EthRecvPanel;
+    eth_widgets.recv_text = ui_EthRecvText;
     eth_widgets.protocol_select = ui_EthProtocolSelect;
     eth_widgets.r_ip_text = ui_EthRemoteIPText;
     eth_widgets.r_port_text = ui_EthRemotePortText;

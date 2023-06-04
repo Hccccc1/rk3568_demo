@@ -54,7 +54,7 @@ extern lv_obj_t * ui_Label13;
 extern lv_obj_t * ui_Label10;
 extern lv_obj_t * ui_BarttetyPercent;
 extern lv_obj_t * ui_Label15;
-extern lv_obj_t * ui_BatteryChagingStatus;
+extern lv_obj_t * ui_BatteryChargingStatus;
 extern lv_obj_t * ui_SuspendBtn;
 extern lv_obj_t * ui_PoweroffBtn;
 extern lv_obj_t * ui_Label16;
@@ -63,6 +63,7 @@ extern lv_obj_t * ui_Label17;
 extern lv_obj_t * ui_ADCValuePanel2;
 extern lv_obj_t * ui_Label14;
 extern lv_obj_t * ui_ADCValuePanel3;
+void ui_event_GPIOValueSelect(lv_event_t * e);
 extern lv_obj_t * ui_GPIOSelect;
 extern lv_obj_t * ui_Label19;
 extern lv_obj_t * ui_GPIODirectionSelect;
@@ -74,7 +75,7 @@ extern lv_obj_t * ui_PeriKeyboard;
 // SCREEN: ui_EthManageScreen
 void ui_EthManageScreen_screen_init(void);
 extern lv_obj_t * ui_EthManageScreen;
-extern lv_obj_t * ui_EthRecvPanel;
+extern lv_obj_t * ui_EthRecvText;
 extern lv_obj_t * ui_Label5;
 extern lv_obj_t * ui_EthProtocolSelect;
 extern lv_obj_t * ui_Label6;
@@ -99,6 +100,8 @@ extern lv_obj_t * ui_EthKeyboard;
 extern serial_widgets_t serial_widgets;
 extern wifi_widgets_t wifi_widgets;
 extern eth_widgets_t eth_widgets;
+extern refresh_widgets_t refresh_widgets;
+extern gpio_control_t gpio_widgets;
 
 void ui_init(void);
 

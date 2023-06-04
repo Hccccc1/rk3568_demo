@@ -36,8 +36,10 @@ typedef struct {
 } wifi_widgets_t;
 
 typedef struct {
+    int socket_fd;
+    int server_fd;
     uint8_t is_connected;
-    lv_obj_t *recv_select;
+    lv_obj_t *recv_text;
     lv_obj_t *protocol_select;
     lv_obj_t *r_ip_text;    // remote ip
     lv_obj_t *l_ip_text;    // local ip
@@ -50,7 +52,19 @@ typedef struct {
 } eth_widgets_t;
 
 typedef struct {
+    lv_obj_t *gpio_select;
+    lv_obj_t *gpio_dirction;
+    lv_obj_t *gpio_value;
+} gpio_control_t;
 
+typedef struct {
+    lv_obj_t *battery_percent;
+    lv_obj_t *charging_status;
+    lv_obj_t *adc_value1;
+    lv_obj_t *adc_value2;
+    lv_obj_t *adc_value3;
+    lv_obj_t *ssid_select;
+    gpio_control_t *gpios;
 } refresh_widgets_t;
 
 void serial_open_clicked(lv_event_t * e);
@@ -65,6 +79,9 @@ void wifi_switch_value_changed(lv_event_t *e);
 void eth_send_btn_clicked(lv_event_t * e);
 void eth_connect_btn_clicked(lv_event_t * e);
 void eth_shutdown_btn_clicked(lv_event_t * e);
+
+void gpio_get_value(gpio_control_t *widgets);
+void gpio_set_value(gpio_control_t *widgets);
 
 #ifdef __cplusplus
 } /*extern "C"*/

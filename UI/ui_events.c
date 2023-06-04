@@ -17,145 +17,172 @@
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
 
+#include "SDL2/SDL_thread.h"
 #include "ui.h"
+
+#define MAX_GPIO_NUMS 20
+
+struct gpio_indicator
+{
+	char *name;
+	uint16_t num;
+} gpios[] = {
+	{.name = "OUT_5V0_EN", .num = 88},
+	{.name = "VCC_5V0_EN", .num = 89},
+	{.name = "K1B", .num = 90},
+	{.name = "K1A", .num = 91},
+	{.name = "K2A", .num = 92},
+	{.name = "K2B", .num = 93},
+	{.name = "K3A", .num = 94},
+	{.name = "K3B", .num = 151},
+	{.name = "K4A", .num = 152},
+	{.name = "K5A", .num = 153},
+	{.name = "IO_ID1_OUT", .num = 154},
+	{.name = "IO_ID0_OUT", .num = 32},
+	{.name = "SWIO1_CPU", .num = 503},
+	{.name = "SWIO2_CPU", .num = 504},
+	{.name = "SWIO3_CPU", .num = 505},
+	{.name = "SWIO4_CPU", .num = 506},
+	{.name = "SWIO5_CPU", .num = 507},
+	{.name = "SWIO6_CPU", .num = 508},
+	{.name = "SWIO7_CPU", .num = 509},
+	{.name = "SWIO8_CPU", .num = 510},
+};
 
 #define TCP_TEST
 
-int tcp_create_and_connect(const char *ip_addr, int port)
+static int tcp_create_and_connect(const char *ip_addr, uint32_t port)
 {
-    int ret;
-    int fd;
+	int fd;
 
-    fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd < 0)
-    {
-        perror("Socket create");
-        return -1;
-    }
+	fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (fd < 0)
+	{
+		perror("Socket create");
+		return -1;
+	}
 
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
 
-    addr.sin_addr.s_addr = inet_addr(ip_addr);
-    addr.sin_port = htons(port);
-    addr.sin_family = AF_INET;
-    socklen_t len = sizeof(addr);
+	addr.sin_addr.s_addr = inet_addr(ip_addr);
+	addr.sin_port = htons(port);
+	addr.sin_family = AF_INET;
+	socklen_t len = sizeof(addr);
 
-    if (connect(fd, (struct sockaddr *)&addr, len) < 0)
-    {
-        perror("connect failed");
-        goto out_close_socket;
-    }
+	if (connect(fd, (struct sockaddr *)&addr, len) < 0)
+	{
+		perror("connect failed");
+		goto out_close_socket;
+	}
 
-    return fd;
+	return fd;
 
 out_close_socket:
-    close(fd);
-    return -1;
+	close(fd);
+	return -1;
 }
 
-int tcp_create_and_listen(uint16_t port)
+static int tcp_create_and_listen(uint16_t port)
 {
-    int ret;
-    int fd;
+	int fd;
 
-    fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd < 0)
-    {
-        perror("Socket create");
-        return -1;
-    }
+	fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (fd < 0)
+	{
+		perror("Socket create");
+		return -1;
+	}
 
-    struct sockaddr_in addr;
-    addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
+	struct sockaddr_in addr;
+	addr.sin_addr.s_addr = INADDR_ANY;
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(port);
 
-    if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-    {
-        perror("bind");
-        goto out_close_socket;
-    }
+	if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+	{
+		perror("bind");
+		goto out_close_socket;
+	}
 
-    if (listen(fd, 5) < 0)
-    {
-        perror("listen");
-        goto out_close_socket;
-    }
+	if (listen(fd, 5) < 0)
+	{
+		perror("listen");
+		goto out_close_socket;
+	}
 
-    return fd;
+	return fd;
 
 out_close_socket:
-    close(fd);
+	close(fd);
 
-    return -1;
+	return -1;
 }
 
-int tcp_write(int socket_fd, const char *w_buf, uint16_t buf_len)
+static int tcp_write(int socket_fd, const char *w_buf, uint16_t buf_len)
 {
-    return write(socket_fd, w_buf, buf_len);
+	return write(socket_fd, w_buf, buf_len);
 }
 
-int tcp_read(int socket_fd, char *r_buf, uint16_t buf_len)
+static int tcp_read(int socket_fd, char *r_buf, uint16_t buf_len)
 {
-    return read(socket_fd, r_buf, buf_len);
+	return read(socket_fd, r_buf, buf_len);
 }
 
-int udp_create_socket(uint16_t my_port)
+static int udp_create_socket(uint16_t my_port)
 {
-    int fd;
+	int fd;
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (fd < 0)
-    {
-        perror("udp socket");
-        return -1;
-    }
+	fd = socket(AF_INET, SOCK_DGRAM, 0);
+	if (fd < 0)
+	{
+		perror("udp socket");
+		return -1;
+	}
 
-    struct sockaddr_in my_addr;
-    my_addr.sin_addr.s_addr = INADDR_ANY;
-    my_addr.sin_port = htons(my_port);
-    my_addr.sin_family = AF_INET;
+	struct sockaddr_in my_addr;
+	my_addr.sin_addr.s_addr = INADDR_ANY;
+	my_addr.sin_port = htons(my_port);
+	my_addr.sin_family = AF_INET;
 
-    if (bind(fd, (struct sockaddr *)&my_addr, sizeof(my_addr)) < 0)
-    {
-        perror("udp bind");
-        goto out_close_socket;
-    }
+	if (bind(fd, (struct sockaddr *)&my_addr, sizeof(my_addr)) < 0)
+	{
+		perror("udp bind");
+		goto out_close_socket;
+	}
 
-    printf("%s %d\n", inet_ntoa(my_addr.sin_addr), ntohs(my_addr.sin_port));
+	printf("%s %d\n", inet_ntoa(my_addr.sin_addr), ntohs(my_addr.sin_port));
 
-    return fd;
+	return fd;
 
 out_close_socket:
-    close(fd);
+	close(fd);
 
-    return -1;
+	return -1;
 }
 
-int udp_recv_from(int socket_fd, const char *ip_addr, uint16_t port, void *recv_buf, uint16_t buf_len)
+static int udp_recv_from(int socket_fd, const char *ip_addr, uint16_t port, void *recv_buf, uint16_t buf_len)
 {
-    struct sockaddr_in from_addr;
-    socklen_t len = sizeof(from_addr);
+	struct sockaddr_in from_addr;
+	socklen_t len = sizeof(from_addr);
 
-    from_addr.sin_addr.s_addr = inet_addr(ip_addr);
-    from_addr.sin_port = htons(port);
-    from_addr.sin_family = AF_INET;
+	from_addr.sin_addr.s_addr = inet_addr(ip_addr);
+	from_addr.sin_port = htons(port);
+	from_addr.sin_family = AF_INET;
 
-    return recvfrom(socket_fd, recv_buf, buf_len, 0, (struct sockaddr *)&from_addr, &len);
+	return recvfrom(socket_fd, recv_buf, buf_len, 0, (struct sockaddr *)&from_addr, &len);
 }
 
-int udp_send_to(int socket_fd, const char *ip_addr, uint16_t port, const void *send_buf, uint16_t buf_len)
+static int udp_send_to(int socket_fd, const char *ip_addr, uint16_t port, const void *send_buf, uint16_t buf_len)
 {
-    struct sockaddr_in to_addr;
+	struct sockaddr_in to_addr;
 
-    to_addr.sin_addr.s_addr = inet_addr(ip_addr);
-    to_addr.sin_port = htons(port);
-    to_addr.sin_family = AF_INET;
+	to_addr.sin_addr.s_addr = inet_addr(ip_addr);
+	to_addr.sin_port = htons(port);
+	to_addr.sin_family = AF_INET;
 
-    return sendto(socket_fd, send_buf, buf_len, 0, (struct sockaddr *)&to_addr, sizeof(to_addr));
+	return sendto(socket_fd, send_buf, buf_len, 0, (struct sockaddr *)&to_addr, sizeof(to_addr));
 }
-
 
 void serial_open_clicked(lv_event_t *e)
 {
@@ -289,6 +316,23 @@ void serial_open_clicked(lv_event_t *e)
 	}
 
 	memset(buf, 0, sizeof(buf));
+	lv_dropdown_get_selected_str(widgets->stopbits_select, buf, sizeof(buf));
+	uint32_t stopbits = strtoul(buf, NULL, 0);
+
+	switch (stopbits)
+	{
+	case 1:
+		new_settings.c_cflag &= ~CSTOPB;
+		break;
+	case 2:
+		new_settings.c_cflag |= CSTOPB;
+		break;
+	default:
+		perror("unsupported stop bits\n");
+		return;
+	}
+
+	memset(buf, 0, sizeof(buf));
 	lv_dropdown_get_selected_str(widgets->hardflow_select, buf, sizeof(buf));
 
 	if (!strcmp(buf, "true"))
@@ -357,59 +401,62 @@ void wifi_scan_clicked(lv_event_t *e)
 	char buf[BUFSIZ] = {0}, ssid_buf[128] = {0};
 	wifi_widgets_t *widgets = lv_event_get_user_data(e);
 
-	if ((fp = popen("wpa_cli scan", "r")) == NULL)
+	if (lv_obj_has_state(widgets->wifi_switch, LV_STATE_CHECKED))
 	{
-		LV_LOG_ERROR("Failed to scan wifi");
-		return;
-	}
-
-	while (fgets(buf, sizeof(buf), fp) != NULL) // fgets()此处是否会阻塞？
-	{
-		if (strstr(buf, "Selected interface") != NULL)
-			continue;
-
-		if (strstr(buf, "OK") != NULL)
+		if ((fp = popen("wpa_cli scan", "r")) == NULL)
 		{
-			LV_LOG_ERROR("close fp and return\n");
-			pclose(fp);
+			LV_LOG_ERROR("Failed to scan wifi");
 			return;
 		}
-	}
 
-	pclose(fp);
-
-	fp = popen("wpa_cli scan_r", "r");
-	if (!fp)
-	{
-		LV_LOG_ERROR("Failed to get scan result\n");
-		return;
-	}
-
-	memset(buf, 0, sizeof(buf));
-	lv_dropdown_clear_options(widgets->ssid_select);
-
-	while (fgets(buf, BUFSIZ, fp) != NULL)
-	{
-		if (strstr(buf, "bssid") != 0 || strstr(buf, "Selected interface") != 0)
-			continue;
-
-		if ((p_n = strstr(buf, "\n")) != NULL) // 注意，\n是接收到的最后一个字符
+		while (fgets(buf, sizeof(buf), fp) != NULL)
 		{
-			p_ssid_end = p_n - 1; //'\n前面一个字符'
-			while (*p_n != '\t')  // 中间是用'\t'制表符隔开的
-				p_n--;
+			if (strstr(buf, "Selected interface") != NULL)
+				continue;
 
-			p_ssid_start = p_n; //'\t'
-			strncpy(ssid_buf, (p_ssid_start + 1), (p_ssid_end - p_ssid_start));
+			if (strstr(buf, "OK") != NULL)
+			{
+				LV_LOG_ERROR("close fp and return\n");
+				pclose(fp);
+				return;
+			}
 		}
 
-		// printf("ssid: %u -> %s\n", ssid_index - 1, ssid_buf[ssid_index - 1]);
+		pclose(fp);
 
-		lv_dropdown_add_option(widgets->ssid_select, ssid_buf, ssid_index);
-		ssid_index++;
+		fp = popen("wpa_cli scan_r", "r");
+		if (!fp)
+		{
+			LV_LOG_ERROR("Failed to get scan result\n");
+			return;
+		}
+
+		memset(buf, 0, sizeof(buf));
+		lv_dropdown_clear_options(widgets->ssid_select);
+
+		while (fgets(buf, BUFSIZ, fp) != NULL)
+		{
+			if (strstr(buf, "bssid") != 0 || strstr(buf, "Selected interface") != 0)
+				continue;
+
+			if ((p_n = strstr(buf, "\n")) != NULL)
+			{
+				p_ssid_end = p_n - 1;
+				while (*p_n != '\t')
+					p_n--;
+
+				p_ssid_start = p_n; //'\t'
+				strncpy(ssid_buf, (p_ssid_start + 1), (p_ssid_end - p_ssid_start));
+			}
+
+			// printf("ssid: %u -> %s\n", ssid_index - 1, ssid_buf[ssid_index - 1]);
+
+			lv_dropdown_add_option(widgets->ssid_select, ssid_buf, ssid_index);
+			ssid_index++;
+		}
+
+		pclose(fp);
 	}
-
-	pclose(fp);
 }
 
 void wifi_connect_clicked(lv_event_t *e)
@@ -421,62 +468,67 @@ void wifi_connect_clicked(lv_event_t *e)
 	char *cmd = NULL;
 	wifi_widgets_t *widgets = lv_event_get_user_data(e);
 
-	cmd = (char *)malloc(sizeof(char) * 128);
-
-	lv_dropdown_get_selected_str(widgets->ssid_select, buf, sizeof(buf));
-
-	strcat(cmd, set_ssid);
-	strcat(cmd, "'\"");
-	strcat(cmd, buf);
-	strcat(cmd, "\"'");
-	LV_LOG_INFO("%s\n", cmd);
-
-	if ((fp = popen(cmd, "r")) == NULL)
+	if (lv_obj_has_state(widgets->wifi_switch, LV_STATE_CHECKED))
 	{
-		LV_LOG_ERROR("set ssid failed\n");
-		return;
-	}
 
-	while (fgets(buf, sizeof(buf), fp) != NULL)
-	{
-		if (strstr(buf, "FAIL") != NULL)
+		cmd = (char *)malloc(sizeof(char) * 128);
+
+		lv_dropdown_get_selected_str(widgets->ssid_select, buf, sizeof(buf));
+
+		strcat(cmd, set_ssid);
+		strcat(cmd, "'\"");
+		strcat(cmd, buf);
+		strcat(cmd, "\"'");
+		LV_LOG_INFO("%s\n", cmd);
+
+		if ((fp = popen(cmd, "r")) == NULL)
 		{
-			LV_LOG_ERROR("Failed to set ssid\n");
-			pclose(fp);
+			LV_LOG_ERROR("set ssid failed\n");
 			return;
 		}
-	}
-	pclose(fp);
-	
-	memset(buf, 0, sizeof(buf));
-	memset(cmd, 0, sizeof(cmd));
 
-	lv_dropdown_get_selected_str(widgets->password_text, buf, sizeof(buf));
+		while (fgets(buf, sizeof(buf), fp) != NULL)
+		{
+			if (strstr(buf, "FAIL") != NULL)
+			{
+				LV_LOG_ERROR("Failed to set ssid\n");
+				pclose(fp);
+				return;
+			}
+		}
+		pclose(fp);
 
-	strcat(cmd, set_password);
-	strcat(cmd, "'\"");
-	strcat(cmd, buf);
-	strcat(cmd, "\"'");
-	LV_LOG_INFO("%s\n", cmd);
+		memset(buf, 0, sizeof(buf));
+		memset(cmd, 0, sizeof(char) * 128);
 
-	if ((fp = popen(cmd, "r")) == NULL) {
-		LV_LOG_ERROR("Set psk failed\b");
-		return;
-	}
+		lv_dropdown_get_selected_str(widgets->password_text, buf, sizeof(buf));
 
-	while (fgets(buf, sizeof(buf), fp) != NULL) {
-		if (strstr(buf, "FAIL") != NULL) {
-			LV_LOG_ERROR("Failed to set psk\n");
-			pclose(fp);
+		strcat(cmd, set_password);
+		strcat(cmd, "'\"");
+		strcat(cmd, buf);
+		strcat(cmd, "\"'");
+		LV_LOG_INFO("%s\n", cmd);
+
+		if ((fp = popen(cmd, "r")) == NULL)
+		{
+			LV_LOG_ERROR("Set psk failed\b");
 			return;
 		}
+
+		while (fgets(buf, sizeof(buf), fp) != NULL)
+		{
+			if (strstr(buf, "FAIL") != NULL)
+			{
+				LV_LOG_ERROR("Failed to set psk\n");
+				pclose(fp);
+				return;
+			}
+		}
+
+		pclose(fp);
+
+		free(cmd);
 	}
-
-	pclose(fp);
-
-	free(cmd);
-
-	return 0;
 }
 
 void wifi_switch_value_changed(lv_event_t *e)
@@ -489,24 +541,264 @@ void wifi_switch_value_changed(lv_event_t *e)
 		system("killall wpa_supplicant");
 }
 
-void eth_send_btn_clicked(lv_event_t * e)
+void eth_send_btn_clicked(lv_event_t *e)
 {
-	// Your code here
-	lv_obj_t *obj = lv_event_get_target(e);
+	enum
+	{
+		TCPClient,
+		TCPServer,
+		UDP
+	} cur_selection;
+	
 	eth_widgets_t *widgets = lv_event_get_user_data(e);
+	
+	char *w_buf = lv_textarea_get_text(widgets->send_text);
+	char *r_ip = NULL;
+	char *r_port = NULL;
 
+	if (widgets->is_connected) {
 
+		cur_selection = lv_dropdown_get_selected(widgets->protocol_select);
+		switch (cur_selection)
+		{
+		case TCPClient:
+			tcp_write(widgets->socket_fd, w_buf, strlen(w_buf));
+			break;
+		case TCPServer:
+			tcp_write(widgets->server_fd, w_buf, strlen(w_buf));
+			break;
+		case UDP:
+			r_ip = lv_textarea_get_text(widgets->r_ip_text);
+			r_port = lv_textarea_get_text(widgets->r_port_text);
+
+			udp_send_to(widgets->socket_fd, r_ip, strtoul(r_port, NULL, 0), w_buf, strlen(w_buf));
+
+			break;
+		default:
+			break;
+		}
+	}
 }
 
-void eth_connect_btn_clicked(lv_event_t * e)
+static int tcp_client_thread(void *data)
 {
-	lv_obj_t *obj = lv_event_get_target(e);
-	eth_widgets_t *widgets = lv_event_get_user_data(e);
+	char buf[BUFSIZ] = {0};
+	eth_widgets_t *widgets = (eth_widgets_t *)data;
 
-	
+	while (1) {
+		if (tcp_read(widgets->socket_fd, buf, BUFSIZ) < 0)
+		{
+			LV_LOG_ERROR("Failed to read");
+			return 1;
+		}
+
+		lv_textarea_add_text(widgets->recv_text, buf);
+		memset(buf, 0, sizeof(buf));
+	}
+
+	return 0;
 }
 
-void eth_shutdown_btn_clicked(lv_event_t * e)
+static int tcp_server_thread(void *data)
 {
-	
+	int connfd, ret;
+	eth_widgets_t *widgets = (eth_widgets_t *)data;
+	char buf[BUFSIZ] = {0};
+
+	while (1) 
+	{
+
+		if ((connfd = accept(widgets->socket_fd, (struct sockaddr*)NULL, NULL)) == -1) {
+			LV_LOG_ERROR("accept server socket\n");
+			return -1;
+		}
+		
+		ret = tcp_read(connfd, buf, BUFSIZ);
+		if (ret < 0)
+		{
+			LV_LOG_ERROR("Failed to read from server\n");
+			close(connfd);
+			return -1;
+		}
+
+		if (strncmp(buf, "quit", sizeof(char)*5) == 0) {
+			close(connfd);
+			return -1;
+		}
+
+		lv_textarea_set_text(widgets->recv_text, buf);
+		memset(buf, 0, sizeof(buf));
+	}
+
+	return 0;
+}
+
+static int udp_thread(void *data)
+{
+	char buf[BUFSIZ] = {0};
+	eth_widgets_t *widgets = (eth_widgets_t *)data;
+
+	char *r_ip = lv_textarea_get_text(widgets->r_ip_text);
+	char *r_port = lv_textarea_get_text(widgets->r_port_text);
+
+	while (1)
+	{
+		if (udp_recv_from(widgets->socket_fd, r_ip, strtoul(r_port, NULL, 0), buf, BUFSIZ) < 0)
+		{
+			LV_LOG_ERROR("Failed to recv from UDP\n");
+			return -1;
+		}
+
+		lv_textarea_set_text(widgets->recv_text, buf);
+	}
+
+	return 0;
+}
+
+void eth_connect_btn_clicked(lv_event_t *e)
+{
+	int fd;
+	enum
+	{
+		TCPClient,
+		TCPServer,
+		UDP
+	} cur_selection;
+	eth_widgets_t *widgets = lv_event_get_user_data(e);
+
+	if (!widgets->is_connected)
+	{
+
+		char *r_ip = lv_textarea_get_text(widgets->r_ip_text);
+		char *r_port = lv_textarea_get_text(widgets->r_port_text);
+		char *l_port = lv_textarea_get_text(widgets->l_port_text);
+
+		cur_selection = lv_dropdown_get_selected(widgets->protocol_select);
+		switch (cur_selection)
+		{
+		case TCPClient:
+			if ((fd = tcp_create_and_connect(r_ip, strtoul(r_port, NULL, 0))) < 0)
+			{
+				LV_LOG_ERROR("Failed to create tcp client\n");
+				widgets->socket_fd = 0;
+				widgets->is_connected = 0;
+				return;
+			}
+
+			widgets->socket_fd = fd;
+			widgets->is_connected = 1;
+
+			SDL_CreateThread(tcp_client_thread, "tcp_client_read", widgets);
+
+			break;
+		case TCPServer:
+			if ((fd = tcp_create_and_listen(strtoul(l_port, NULL, 0))) < 0)
+			{
+				LV_LOG_ERROR("Failed to create tcp server\n");
+				widgets->socket_fd = 0;
+				widgets->is_connected = 0;
+				return;
+			}
+
+			widgets->socket_fd = fd;
+			widgets->is_connected = 1;
+
+			SDL_CreateThread(tcp_server_thread, "tcp_server_read", widgets);
+
+			break;
+		case UDP:
+			if ((fd = udp_create_socket(strtoul(l_port, NULL, 0))) < 0)
+			{
+				LV_LOG_ERROR("Failed to create UDP socket\n");
+				widgets->socket_fd = 0;
+				widgets->is_connected = 0;
+			}
+
+			widgets->socket_fd = fd;
+			widgets->is_connected = 1;
+
+			SDL_CreateThread(udp_thread, "udp_thread", widgets);
+
+			break;
+		default:
+			return;
+		}
+	}
+}
+
+void eth_shutdown_btn_clicked(lv_event_t *e)
+{
+	eth_widgets_t *widgets = lv_event_get_user_data(e);
+
+	if (widgets->is_connected) {
+		close(widgets->socket_fd);
+		widgets->is_connected = 0;
+	}
+}
+
+void gpio_get_value(gpio_control_t *widgets)
+{
+	int i;
+	char buf[128] = {0};
+	char *export_cmd = "echo %u > /sys/class/gpio/export";
+	char *direction_cmd = "echo in > /sys/class/gpio/gpio%u/direction";
+	char *get_cmd = "cat /sys/class/gpio/gpio%u/value";
+	FILE *fp = NULL;
+
+	lv_dropdown_get_selected_str(widgets->gpio_select, buf, sizeof(buf));
+
+	for (i = 0; i < MAX_GPIO_NUMS; i++)
+	{
+		if (strcmp(buf, gpios[i].name) == 0)
+			break;
+	}
+
+	sprintf(buf, export_cmd, gpios[i].num);
+	system(buf);
+	memset(buf, 0, sizeof(buf));
+
+	sprintf(buf, direction_cmd, gpios[i].num);
+	system(buf);
+	memset(buf, 0, sizeof(buf));
+
+	sprintf(buf, get_cmd, gpios[i].num);
+
+	fp = popen(buf, "r");
+	if (!fp)
+		return;
+
+	memset(buf, 0, sizeof(buf));
+
+	while (fgets(buf, sizeof(buf), fp) != NULL)
+		;
+
+	lv_dropdown_set_selected(widgets->gpio_value, strtoul(buf, NULL, 0));
+}
+
+void gpio_set_value(gpio_control_t *widgets)
+{
+	int i;
+	char buf[128] = {0};
+	char *export_cmd = "echo %u > /sys/class/gpio/export";
+	char *direction_cmd = "echo out > /sys/class/gpio/gpio%u/direction";
+	char *set_cmd = "echo %u > /sys/class/gpio/gpio%u/value";
+
+	lv_dropdown_get_selected_str(widgets->gpio_select, buf, sizeof(buf));
+
+	for (i = 0; i < MAX_GPIO_NUMS; i++)
+	{
+		if (strcmp(buf, gpios[i].name) == 0)
+			break;
+	}
+
+	sprintf(buf, export_cmd, gpios[i].num);
+	system(buf);
+	memset(buf, 0, sizeof(buf));
+
+	sprintf(buf, direction_cmd, gpios[i].num);
+	system(buf);
+	memset(buf, 0, sizeof(buf));
+
+	sprintf(buf, set_cmd, lv_dropdown_get_selected(widgets->gpio_value), gpios[i].num);
+	system(buf);
 }

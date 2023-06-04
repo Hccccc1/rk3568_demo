@@ -7,7 +7,6 @@
 #include "ui_helpers.h"
 
 ///////////////////// VARIABLES ////////////////////
-
 // SCREEN: ui_PeriManageScreen
 void ui_PeriManageScreen_screen_init(void);
 lv_obj_t * ui_PeriManageScreen;
@@ -47,7 +46,7 @@ lv_obj_t * ui_Label13;
 lv_obj_t * ui_Label10;
 lv_obj_t * ui_BarttetyPercent;
 lv_obj_t * ui_Label15;
-lv_obj_t * ui_BatteryChagingStatus;
+lv_obj_t * ui_BatteryChargingStatus;
 lv_obj_t * ui_SuspendBtn;
 lv_obj_t * ui_PoweroffBtn;
 lv_obj_t * ui_Label16;
@@ -56,6 +55,7 @@ lv_obj_t * ui_Label17;
 lv_obj_t * ui_ADCValuePanel2;
 lv_obj_t * ui_Label14;
 lv_obj_t * ui_ADCValuePanel3;
+void ui_event_GPIOValueSelect(lv_event_t * e);
 lv_obj_t * ui_GPIOSelect;
 lv_obj_t * ui_Label19;
 lv_obj_t * ui_GPIODirectionSelect;
@@ -69,7 +69,7 @@ lv_obj_t * ui_PeriKeyboard;
 // SCREEN: ui_EthManageScreen
 void ui_EthManageScreen_screen_init(void);
 lv_obj_t * ui_EthManageScreen;
-lv_obj_t * ui_EthRecvPanel;
+lv_obj_t * ui_EthRecvText;
 lv_obj_t * ui_Label5;
 lv_obj_t * ui_EthProtocolSelect;
 lv_obj_t * ui_Label6;
@@ -99,6 +99,8 @@ void ui_event_EthSendText(lv_event_t * e);
 serial_widgets_t serial_widgets;
 wifi_widgets_t wifi_widgets;
 eth_widgets_t eth_widgets;
+refresh_widgets_t refresh_widgets;
+gpio_control_t gpio_widgets;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 32
@@ -181,7 +183,7 @@ void ui_event_WifiSwitch(lv_event_t * e)
 void ui_event_EthSendBtn(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+
     if(event_code == LV_EVENT_CLICKED) {
         eth_send_btn_clicked(e);
     }
@@ -190,7 +192,7 @@ void ui_event_EthSendBtn(lv_event_t * e)
 void ui_event_EthConnectBtn(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+    
     if(event_code == LV_EVENT_CLICKED) {
         eth_connect_btn_clicked(e);
     }
@@ -199,7 +201,7 @@ void ui_event_EthConnectBtn(lv_event_t * e)
 void ui_event_EthShutdownBtn(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
+    
     if(event_code == LV_EVENT_CLICKED) {
         eth_shutdown_btn_clicked(e);
     }
@@ -224,6 +226,24 @@ void ui_event_EthKeyboard(lv_event_t * e)
     }
 }
 
+void ui_event_GPIOValueSelect(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    gpio_control_t *widgets = lv_event_get_user_data(e);
+
+    if (event_code == LV_EVENT_VALUE_CHANGED) {
+        LV_LOG_ERROR("VALUE changed");
+
+        if (!lv_dropdown_get_selected(widgets->gpio_dirction)) {
+            // GPIO IN
+            gpio_get_value(widgets);
+        } else {
+            // GPIO OUT
+            gpio_set_value(widgets);
+        }
+    }
+}
+
 ///////////////////// SCREENS ////////////////////
 
 void ui_init(void)
@@ -236,4 +256,5 @@ void ui_init(void)
     ui_EthManageScreen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
     lv_disp_load_scr(ui_EthManageScreen);
+
 }

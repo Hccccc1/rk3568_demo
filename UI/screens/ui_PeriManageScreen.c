@@ -34,6 +34,11 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_SerialPortSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_SerialPortSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
+    lv_dropdown_clear_options(ui_SerialPortSelect);
+    lv_dropdown_add_option(ui_SerialPortSelect, "/dev/ttyS3", 0);
+    lv_dropdown_add_option(ui_SerialPortSelect, "/dev/ttyS4", 1);
+    lv_dropdown_add_option(ui_SerialPortSelect, "/dev/ttyS7", 2);
+
     ui_Label2 = lv_label_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_Label2, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label2, LV_SIZE_CONTENT);    /// 1
@@ -50,6 +55,19 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_SerialBaudrateSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_SerialBaudrateSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
+    lv_dropdown_clear_options(ui_SerialBaudrateSelect);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "1200", 0);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "2400", 1);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "4800", 2);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "9600", 3);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "19200", 4);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "38400", 5);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "57600", 6);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "115200", 7);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "230400", 8);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "460800", 9);
+    lv_dropdown_add_option(ui_SerialBaudrateSelect, "921600", 10);
+
     ui_SerialDatabitsSelect = lv_dropdown_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SerialDatabitsSelect, 150);
     lv_obj_set_height(ui_SerialDatabitsSelect, LV_SIZE_CONTENT);    /// 1
@@ -57,6 +75,12 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_y(ui_SerialDatabitsSelect, -90);
     lv_obj_set_align(ui_SerialDatabitsSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_SerialDatabitsSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+    lv_dropdown_clear_options(ui_SerialDatabitsSelect);
+    lv_dropdown_add_option(ui_SerialDatabitsSelect, "5", 0);
+    lv_dropdown_add_option(ui_SerialDatabitsSelect, "6", 1);
+    lv_dropdown_add_option(ui_SerialDatabitsSelect, "7", 2);
+    lv_dropdown_add_option(ui_SerialDatabitsSelect, "8", 3);
 
     ui_SerialStopbitsSelect = lv_dropdown_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SerialStopbitsSelect, 150);
@@ -66,6 +90,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_SerialStopbitsSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_SerialStopbitsSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
+    lv_dropdown_clear_options(ui_SerialStopbitsSelect);
+    lv_dropdown_add_option(ui_SerialStopbitsSelect, "1", 0);
+    lv_dropdown_add_option(ui_SerialStopbitsSelect, "2", 1);
+
     ui_SerialParitySelect = lv_dropdown_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SerialParitySelect, 150);
     lv_obj_set_height(ui_SerialParitySelect, LV_SIZE_CONTENT);    /// 1
@@ -74,6 +102,13 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_SerialParitySelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_SerialParitySelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
+    lv_dropdown_clear_options(ui_SerialParitySelect);
+    lv_dropdown_add_option(ui_SerialParitySelect, "None", 0);
+    lv_dropdown_add_option(ui_SerialParitySelect, "Odd", 1);
+    lv_dropdown_add_option(ui_SerialParitySelect, "Even", 2);
+    lv_dropdown_add_option(ui_SerialParitySelect, "Mark", 3);
+    lv_dropdown_add_option(ui_SerialParitySelect, "Space", 4);
+
     ui_SerialFlowControlSelect = lv_dropdown_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SerialFlowControlSelect, 150);
     lv_obj_set_height(ui_SerialFlowControlSelect, LV_SIZE_CONTENT);    /// 1
@@ -81,6 +116,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_y(ui_SerialFlowControlSelect, 90);
     lv_obj_set_align(ui_SerialFlowControlSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_SerialFlowControlSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+    lv_dropdown_clear_options(ui_SerialFlowControlSelect);
+    lv_dropdown_add_option(ui_SerialFlowControlSelect, "true", 0);
+    lv_dropdown_add_option(ui_SerialFlowControlSelect, "false", 1);
 
     ui_Label4 = lv_label_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_Label4, LV_SIZE_CONTENT);   /// 1
@@ -123,6 +162,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_add_flag(ui_SerialOpenBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SerialOpenBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    lv_obj_t * serialOpenLabel = lv_label_create(ui_SerialOpenBtn);
+    lv_label_set_text(serialOpenLabel, "Connect");
+    lv_obj_center(serialOpenLabel);
+
     ui_SerialSendBtn = lv_btn_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SerialSendBtn, 100);
     lv_obj_set_height(ui_SerialSendBtn, 99);
@@ -132,7 +175,11 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_add_flag(ui_SerialSendBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SerialSendBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_SerialReadPanel = lv_obj_create(ui_PeriManageScreen);
+    lv_obj_t * serialSendLabel = lv_label_create(ui_SerialSendBtn);
+    lv_label_set_text(serialSendLabel, "Send");
+    lv_obj_center(serialSendLabel);
+
+    ui_SerialReadPanel = lv_textarea_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SerialReadPanel, 502);
     lv_obj_set_height(ui_SerialReadPanel, 114);
     lv_obj_set_x(ui_SerialReadPanel, -376);
@@ -148,6 +195,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_WifiScanBtn, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_WifiScanBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_WifiScanBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    lv_obj_t * wifiScanLabel = lv_label_create(ui_WifiScanBtn);
+    lv_label_set_text(wifiScanLabel, "Scan");
+    lv_obj_center(wifiScanLabel);
 
     ui_WifiSwitch = lv_switch_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_WifiSwitch, 50);
@@ -172,13 +223,16 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_WifiSSIDSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_WifiSSIDSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
+    lv_dropdown_clear_options(ui_WifiSSIDSelect);
+    lv_dropdown_add_option(ui_WifiSSIDSelect, "No Wifi Found", 0);
+
     ui_WifiPasswordTextArea = lv_textarea_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_WifiPasswordTextArea, 150);
     lv_obj_set_height(ui_WifiPasswordTextArea, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_WifiPasswordTextArea, 390);
     lv_obj_set_y(ui_WifiPasswordTextArea, -200);
     lv_obj_set_align(ui_WifiPasswordTextArea, LV_ALIGN_CENTER);
-    lv_textarea_set_placeholder_text(ui_WifiPasswordTextArea, "Placeholder...");
+    lv_textarea_set_placeholder_text(ui_WifiPasswordTextArea, "Password...");
 
     ui_WifiEncryptMethodSelect = lv_dropdown_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_WifiEncryptMethodSelect, 150);
@@ -188,6 +242,12 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_WifiEncryptMethodSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_WifiEncryptMethodSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
+    lv_dropdown_clear_options(ui_WifiEncryptMethodSelect);
+    lv_dropdown_add_option(ui_WifiEncryptMethodSelect, "WPA", 0);
+    lv_dropdown_add_option(ui_WifiEncryptMethodSelect, "WPA2", 1);
+    lv_dropdown_add_option(ui_WifiEncryptMethodSelect, "WEP", 2);
+    lv_dropdown_add_option(ui_WifiEncryptMethodSelect, "WAPI", 3);
+
     ui_WifiConnectBtn = lv_btn_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_WifiConnectBtn, 100);
     lv_obj_set_height(ui_WifiConnectBtn, 50);
@@ -196,6 +256,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_WifiConnectBtn, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_WifiConnectBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_WifiConnectBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    lv_obj_t * wifiConnectLabel = lv_label_create(ui_WifiConnectBtn);
+    lv_label_set_text(wifiConnectLabel, "Connect");
+    lv_obj_center(wifiConnectLabel);
 
     ui_Label11 = lv_label_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_Label11, LV_SIZE_CONTENT);   /// 1
@@ -237,7 +301,7 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_Label10, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label10, "Battery");
 
-    ui_BarttetyPercent = lv_obj_create(ui_PeriManageScreen);
+    ui_BarttetyPercent = lv_textarea_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_BarttetyPercent, 100);
     lv_obj_set_height(ui_BarttetyPercent, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_BarttetyPercent, -450);
@@ -253,13 +317,13 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_Label15, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label15, "ChargeStatus");
 
-    ui_BatteryChagingStatus = lv_obj_create(ui_PeriManageScreen);
-    lv_obj_set_width(ui_BatteryChagingStatus, 100);
-    lv_obj_set_height(ui_BatteryChagingStatus, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_BatteryChagingStatus, -220);
-    lv_obj_set_y(ui_BatteryChagingStatus, 322);
-    lv_obj_set_align(ui_BatteryChagingStatus, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_BatteryChagingStatus, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    ui_BatteryChargingStatus = lv_textarea_create(ui_PeriManageScreen);
+    lv_obj_set_width(ui_BatteryChargingStatus, 100);
+    lv_obj_set_height(ui_BatteryChargingStatus, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_BatteryChargingStatus, -220);
+    lv_obj_set_y(ui_BatteryChargingStatus, 322);
+    lv_obj_set_align(ui_BatteryChargingStatus, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_BatteryChargingStatus, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_SuspendBtn = lv_btn_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_SuspendBtn, 100);
@@ -270,6 +334,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_add_flag(ui_SuspendBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_SuspendBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    lv_obj_t * suspendLabel = lv_label_create(ui_SuspendBtn);
+    lv_label_set_text(suspendLabel, "Suspend");
+    lv_obj_center(suspendLabel);
+
     ui_PoweroffBtn = lv_btn_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_PoweroffBtn, 100);
     lv_obj_set_height(ui_PoweroffBtn, 50);
@@ -279,6 +347,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_add_flag(ui_PoweroffBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_PoweroffBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    lv_obj_t * poweroffLabel = lv_label_create(ui_PoweroffBtn);
+    lv_label_set_text(poweroffLabel, "Poweroff");
+    lv_obj_center(poweroffLabel);
+
     ui_Label16 = lv_label_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_Label16, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label16, LV_SIZE_CONTENT);    /// 1
@@ -287,7 +359,7 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_Label16, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label16, "ADC1");
 
-    ui_ADCValuePanel1 = lv_obj_create(ui_PeriManageScreen);
+    ui_ADCValuePanel1 = lv_textarea_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_ADCValuePanel1, 100);
     lv_obj_set_height(ui_ADCValuePanel1, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_ADCValuePanel1, 50);
@@ -303,7 +375,7 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_Label17, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label17, "ADC2");
 
-    ui_ADCValuePanel2 = lv_obj_create(ui_PeriManageScreen);
+    ui_ADCValuePanel2 = lv_textarea_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_ADCValuePanel2, 100);
     lv_obj_set_height(ui_ADCValuePanel2, 50);
     lv_obj_set_x(ui_ADCValuePanel2, 270);
@@ -319,7 +391,7 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_Label14, LV_ALIGN_CENTER);
     lv_label_set_text(ui_Label14, "ADC3");
 
-    ui_ADCValuePanel3 = lv_obj_create(ui_PeriManageScreen);
+    ui_ADCValuePanel3 = lv_textarea_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_ADCValuePanel3, 100);
     lv_obj_set_height(ui_ADCValuePanel3, 50);
     lv_obj_set_x(ui_ADCValuePanel3, 500);
@@ -334,6 +406,29 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_y(ui_GPIOSelect, 0);
     lv_obj_set_align(ui_GPIOSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_GPIOSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+    lv_dropdown_clear_options(ui_GPIOSelect);
+
+    lv_dropdown_add_option(ui_GPIOSelect, "OUT_5V0_EN", 0);
+    lv_dropdown_add_option(ui_GPIOSelect, "VCC_5V0_EN", 1);
+    lv_dropdown_add_option(ui_GPIOSelect, "K1B", 2);
+    lv_dropdown_add_option(ui_GPIOSelect, "K1A", 3);
+    lv_dropdown_add_option(ui_GPIOSelect, "K2A", 4);
+    lv_dropdown_add_option(ui_GPIOSelect, "K2B", 5);
+    lv_dropdown_add_option(ui_GPIOSelect, "K3A", 6);
+    lv_dropdown_add_option(ui_GPIOSelect, "K3B", 7);
+    lv_dropdown_add_option(ui_GPIOSelect, "K4A", 8);
+    lv_dropdown_add_option(ui_GPIOSelect, "K5A", 9);
+    lv_dropdown_add_option(ui_GPIOSelect, "IO_ID1_OUT", 10);
+    lv_dropdown_add_option(ui_GPIOSelect, "IO_ID0_OUT", 11);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO1_CPU", 12);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO2_CPU", 13);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO3_CPU", 14);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO4_CPU", 15);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO5_CPU", 16);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO6_CPU", 17);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO7_CPU", 18);
+    lv_dropdown_add_option(ui_GPIOSelect, "SWIO8_CPU", 19);
 
     ui_Label19 = lv_label_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_Label19, LV_SIZE_CONTENT);   /// 1
@@ -351,6 +446,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_align(ui_GPIODirectionSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_GPIODirectionSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
 
+    lv_dropdown_clear_options(ui_GPIODirectionSelect);
+    lv_dropdown_add_option(ui_GPIODirectionSelect, "in", 0);
+    lv_dropdown_add_option(ui_GPIODirectionSelect, "out", 1);
+
     ui_Label20 = lv_label_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_Label20, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_Label20, LV_SIZE_CONTENT);    /// 1
@@ -366,6 +465,10 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_set_y(ui_GPIOValueSelect, 0);
     lv_obj_set_align(ui_GPIOValueSelect, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_GPIOValueSelect, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+    lv_dropdown_clear_options(ui_GPIOValueSelect);
+    lv_dropdown_add_option(ui_GPIOValueSelect, "LOW", 0);
+    lv_dropdown_add_option(ui_GPIOValueSelect, "HIGH", 1);
 
     ui_Label21 = lv_label_create(ui_PeriManageScreen);
     lv_obj_set_width(ui_Label21, LV_SIZE_CONTENT);   /// 1
@@ -406,4 +509,18 @@ void ui_PeriManageScreen_screen_init(void)
     lv_obj_add_event_cb(ui_WifiScanBtn, ui_event_WifiScanBtn, LV_EVENT_ALL, &wifi_widgets);
     lv_obj_add_event_cb(ui_WifiConnectBtn, ui_event_WifiConnectBtn, LV_EVENT_ALL, &wifi_widgets);
     lv_obj_add_event_cb(ui_WifiPasswordTextArea, ui_event_PeriKeyboard, LV_EVENT_ALL, ui_PeriKeyboard);
+
+    refresh_widgets.battery_percent = ui_BarttetyPercent;
+    refresh_widgets.charging_status = ui_BatteryChargingStatus;
+    refresh_widgets.adc_value1 = ui_ADCValuePanel1;
+    refresh_widgets.adc_value2 = ui_ADCValuePanel2;
+    refresh_widgets.adc_value3 = ui_ADCValuePanel3;
+    // refresh_widgets.ssid_select = ui_WifiSSIDSelect;
+
+    gpio_widgets.gpio_select = ui_GPIOSelect;
+    gpio_widgets.gpio_dirction = ui_GPIODirectionSelect;
+    gpio_widgets.gpio_value = ui_GPIOValueSelect;
+
+    lv_obj_add_event_cb(ui_GPIOValueSelect, ui_event_GPIOValueSelect, LV_EVENT_ALL, &gpio_widgets);
+
 }
