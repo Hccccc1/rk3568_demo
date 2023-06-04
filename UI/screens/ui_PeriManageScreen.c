@@ -523,4 +523,7 @@ void ui_PeriManageScreen_screen_init(void)
 
     lv_obj_add_event_cb(ui_GPIOValueSelect, ui_event_GPIOValueSelect, LV_EVENT_ALL, &gpio_widgets);
 
+    lv_obj_add_event_cb(ui_SuspendBtn, ui_event_SuspendBtn, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_PoweroffBtn, ui_event_PoweroffBtn, LV_EVENT_ALL, NULL);
+
 }

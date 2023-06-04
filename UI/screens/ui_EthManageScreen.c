@@ -92,6 +92,10 @@ void ui_EthManageScreen_screen_init(void)
     lv_obj_add_flag(ui_EthConnectBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_EthConnectBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    lv_obj_t * ethConnectLabel = lv_label_create(ui_EthConnectBtn);
+    lv_label_set_text(ethConnectLabel, "Connect");
+    lv_obj_center(ethConnectLabel);
+
     ui_EthShutdownBtn = lv_btn_create(ui_EthManageScreen);
     lv_obj_set_width(ui_EthShutdownBtn, 60);
     lv_obj_set_height(ui_EthShutdownBtn, 50);
@@ -100,6 +104,10 @@ void ui_EthManageScreen_screen_init(void)
     lv_obj_set_align(ui_EthShutdownBtn, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_EthShutdownBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_EthShutdownBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    lv_obj_t * ethShutdownLabel = lv_label_create(ui_EthShutdownBtn);
+    lv_label_set_text(ethShutdownLabel, "Shutdown");
+    lv_obj_center(ethShutdownLabel);
 
     ui_EthSendText = lv_textarea_create(ui_EthManageScreen);
     lv_obj_set_width(ui_EthSendText, 400);
@@ -117,6 +125,10 @@ void ui_EthManageScreen_screen_init(void)
     lv_obj_set_align(ui_EthSendBtn, LV_ALIGN_CENTER);
     lv_obj_add_flag(ui_EthSendBtn, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_clear_flag(ui_EthSendBtn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+
+    lv_obj_t * ethSendLabel = lv_label_create(ui_EthSendBtn);
+    lv_label_set_text(ethSendLabel, "Send");
+    lv_obj_center(ethSendLabel);
     
     ui_EthKeyboard = lv_keyboard_create(ui_EthManageScreen);
     lv_obj_add_flag(ui_EthKeyboard, LV_OBJ_FLAG_HIDDEN);

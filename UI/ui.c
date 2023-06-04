@@ -47,7 +47,9 @@ lv_obj_t * ui_Label10;
 lv_obj_t * ui_BarttetyPercent;
 lv_obj_t * ui_Label15;
 lv_obj_t * ui_BatteryChargingStatus;
+void ui_event_SuspendBtn(lv_event_t * e);
 lv_obj_t * ui_SuspendBtn;
+void ui_event_PoweroffBtn(lv_event_t * e);
 lv_obj_t * ui_PoweroffBtn;
 lv_obj_t * ui_Label16;
 lv_obj_t * ui_ADCValuePanel1;
@@ -241,6 +243,26 @@ void ui_event_GPIOValueSelect(lv_event_t * e)
             // GPIO OUT
             gpio_set_value(widgets);
         }
+    }
+}
+
+void ui_event_SuspendBtn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+        suspend_btn_clicked(e);
+    }
+}
+
+void ui_event_PoweroffBtn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if (event_code == LV_EVENT_CLICKED)
+    {
+        poweroff_btn_clicked(e);
     }
 }
 

@@ -736,6 +736,16 @@ void eth_shutdown_btn_clicked(lv_event_t *e)
 	}
 }
 
+void suspend_btn_clicked(lv_event_t * e)
+{
+	system("pm-suspend");
+}
+
+void poweroff_btn_clicked(lv_event_t * e)
+{
+	system("poweroff");
+}
+
 void gpio_get_value(gpio_control_t *widgets)
 {
 	int i;

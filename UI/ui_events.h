@@ -83,6 +83,9 @@ void eth_shutdown_btn_clicked(lv_event_t * e);
 void gpio_get_value(gpio_control_t *widgets);
 void gpio_set_value(gpio_control_t *widgets);
 
+void suspend_btn_clicked(lv_event_t * e);
+void poweroff_btn_clicked(lv_event_t * e);
+
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif
